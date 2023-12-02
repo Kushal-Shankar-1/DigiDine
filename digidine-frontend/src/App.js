@@ -6,6 +6,12 @@ import SignUp from './SignUp';
 import SignUpChef from './SignUpChef';
 import SignUpOption from './SignUpOption';
 import Home from './Home';
+import Header from './Header';
+import Footer from './Footer';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const defaultTheme = createTheme();
 
 // import LoggedInPortal from './LoggedInPortal';
 // import Fridge from './Fridge';
@@ -18,6 +24,9 @@ const App = () => {
 
   return (
     <Router>
+        <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      <Header setLoggedIn={setLoggedIn} />
       <Routes>
         <Route path="/" element={<Home loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path="/signup"  element={<SignUp />} />
@@ -35,6 +44,7 @@ const App = () => {
           <CreateDish fridgeItems={fridgeItems} />
         </Route> */}
       </Routes>
+      <Footer /> </ThemeProvider>
     </Router>
   );
 };

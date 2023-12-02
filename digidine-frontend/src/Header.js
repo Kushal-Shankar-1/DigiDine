@@ -25,14 +25,16 @@ export default function Header(props) {
         };
 
         const handleLogOut = () => {
-            console.log("logging out", props);
+            console.log("logging out", props)
             props.setLoggedIn(false);
             handleClose();
         };
-
         return (
-<AppBar position="absolute">
-        <Toolbar style={{justifyContent: 'end'}}>
+        <AppBar position="absolute">
+        <Toolbar >
+        <Typography style={{justifySelf: 'start', marginRight: '50%'}} variant="h6" color="inherit" noWrap>
+        DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
+          </Typography>
           <UserIcon sx={{ mr: 2 }} />
           <Typography variant="h6" color="inherit" noWrap>
             Username
