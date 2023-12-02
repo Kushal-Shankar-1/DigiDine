@@ -217,17 +217,8 @@ SELECT * from recipe;
 END**
 DELIMITER ;
 
-SELECT * FROM recipe;
 
-SELECT * FROM user_has_flavour_pref WHERE user="hrishi";
-SELECT * FROM user_has_restriction WHERE user="hrishi";
-SELECT * FROM recipe_has_flavour;
-DELETE FROM recipe_has_flavour WHERE recipe=1;
 INSERT INTO recipe_has_flavour VALUES(1, "Spicy");
-SELECT * FROM recipe r WHERE 
-	EXISTS(SELECT flavour FROM user_has_flavour_pref AS uf WHERE user = "hrishi" AND EXISTS( SELECT * FROM recipe_has_flavour WHERE r.recipe_id AND uf.flavour=flavour))
-    AND EXISTS(SELECT diet FROM user_has_restriction AS ur WHERE user = "hrishi" AND EXISTS( SELECT * FROM recipe_has_flavour WHERE r.recipe_id AND uf.flavour=flavour))
-    ;
 
 
 #List of dietary restrictions for a given recipe based on ingredients in it
@@ -249,17 +240,65 @@ END $
 DELIMITER ;
 
 
+#List of recipes that can be made with ingredients in fridge
+SELECT * FROM recipe r WHERE NOT EXISTS(SELECT * FROM recipe_contains_ingredients WHERE recipe=r.recipe_id 
+										AND ingredient NOT IN (SELECT ingredient_name FROM fridge_contains_ingredients NATURAL JOIN (
+SELECT fridge FROM user WHERE user_name="hari") user_fridge )) ;
 
-drop procedure if exists get_preferred_recipe;
-DELIMITER **
-CREATE PROCEDURE get_preferred_recipe(IN user_name VARCHAR(256))
-	BEGIN
-		SELECT * from recipe;
-	END**
+
+
+drop procedure IF EXISTS recipes_with_fridge_ingredients;
+DELIMITER $
+CREATE PROCEDURE all_recipes_with_fridge_ingredients (IN user_name_p VARCHAR(64))
+BEGIN
+	SELECT * FROM recipe r WHERE NOT EXISTS(SELECT * FROM recipe_contains_ingredients WHERE recipe=r.recipe_id 
+										AND ingredient NOT IN (SELECT ingredient_name FROM fridge_contains_ingredients NATURAL JOIN (
+SELECT fridge FROM user WHERE user_name=user_name_p) user_fridge )) ;
+END $
+
+DELIMITER ;
+
+CALL all_recipes_with_fridge_ingredients('hrishi');
+
+
+drop procedure get_custom_recipes_with_ingredients;
+DELIMITER $
+CREATE PROCEDURE get_custom_recipes_with_ingredients (IN user_name_p VARCHAR(64))
+BEGIN
+SELECT * FROM (SELECT * FROM recipe r WHERE 
+	NOT EXISTS(SELECT diet FROM user_has_restriction WHERE user=user_name_p #Does not exist any user dietary restriction that is not met by the recipe
+				AND diet != ALL (SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=r.recipe_id))))) diet_recipes
+JOIN ( #Merge all recipes that satisfies user dietary restriction AND user flavor preferences
+SELECT * FROM recipe WHERE NOT EXISTS(SELECT * FROM user_has_flavour_pref WHERE user=user_name_p) #If no flavor preference, take all recipes
+UNION 
+SELECT * FROM recipe r WHERE #Get recipes that match user flavor preference
+EXISTS(SELECT flavour FROM user_has_flavour_pref AS uf WHERE user = user_name_p AND EXISTS( SELECT * FROM recipe_has_flavour WHERE r.recipe_id AND uf.flavour=flavour))) AS flavor_recipes ON diet_recipes.recipe_id = flavor_recipes.recipe_id;
+END $
 DELIMITER ;
 
 
+drop procedure IF EXISTS preferred_recipes_with_fridge_ingredients;
 
+DELIMITER $
+CREATE PROCEDURE preferred_recipes_with_fridge_ingredients (IN user_name_p VARCHAR(64))
+BEGIN
+SELECT * FROM (
+		SELECT * FROM (SELECT * FROM recipe r WHERE 
+	NOT EXISTS(SELECT diet FROM user_has_restriction WHERE user=user_name_p #Does not exist any user dietary restriction that is not met by the recipe
+				AND diet != ALL (SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=r.recipe_id))))) AS diet_recipes
+NATURAL JOIN ( #Merge all recipes that satisfies user dietary restriction AND user flavor preferences
+SELECT * FROM recipe WHERE NOT EXISTS(SELECT * FROM user_has_flavour_pref WHERE user=user_name_p) #If no flavor preference, take all recipes
+UNION 
+SELECT * FROM recipe r WHERE #Get recipes that match user flavor preference
+EXISTS(SELECT flavour FROM user_has_flavour_pref AS uf WHERE user = user_name_p AND EXISTS (SELECT * FROM recipe_has_flavour WHERE r.recipe_id AND uf.flavour=flavour)))
+AS flavor_recipes) 
+AS preferred_recipes
+    WHERE NOT EXISTS(SELECT * FROM recipe_contains_ingredients WHERE recipe=preferred_recipes.recipe_id 
+										AND ingredient NOT IN (SELECT ingredient_name FROM fridge_contains_ingredients NATURAL JOIN (
+SELECT fridge FROM user WHERE user_name=user_name_p) user_fridge ));
+END $
+
+DELIMITER ;
 
 
 CALL register_user('hrishi', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 'BLUE');
@@ -314,3 +353,8 @@ INSERT INTO ingredient_has_restriction VALUES('onion', 'Gluten free');
 INSERT INTO recipe_contains_ingredients VALUES(1,'onion');
 CALL get_custom_recipes('hrishi');
 CALL get_custom_recipes('hari');
+
+
+INSERT INTO fridge_contains_ingredients VALUES('onion',1);
+CALL preferred_recipes_with_fridge_ingredients('hari');
+CALL preferred_recipes_with_fridge_ingredients('hrishi');
