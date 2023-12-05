@@ -20,39 +20,6 @@ export default function Recipes() {
     
       <main>
         {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-              style={{marginTop: '10%'}}
-            >
-              Hungry? Of course, you are!
-            </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Let's explore some food options! Check out what the chefs in your area are cooking up! Select 
-              the ingredients you have stocked up in your fridge to see what all you can make right now!
-            </Typography>
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button variant="contained">Explore Dishes</Button>
-              <Button variant="outlined">Select Items From Fridge</Button>
-            </Stack>
-          </Container>
-        </Box>
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>

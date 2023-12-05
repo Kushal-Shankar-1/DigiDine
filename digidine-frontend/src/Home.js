@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SignIn from './SignIn';
 import Header from './Header';
 import Footer from './Footer';
-import Recipes from './Recipes';
+import UserPage from './UserPage';
 import ChefPage from './ChefPage';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -27,6 +27,6 @@ export default function Home(props) {
   return (
     loggedIn? (
       userType === 'user' ?(
-      <Recipes />) : <ChefPage />
+      <UserPage />) : <ChefPage />
   ): (<SignIn setLoggedIn={setLoggedIn}/> ));
 }
