@@ -10,6 +10,8 @@ import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
+import UpdatePreferences from './UpdatePreferences';
+import UpdateInventory from './UpdateInventory';
 
 
 export default function UserPage() {
@@ -80,7 +82,9 @@ export default function UserPage() {
                     }
                 </Container>
             </Box>
-            <Recipes />
+            {selectedOption === "explore" && <Recipes />}
+            {selectedOption === "updateInventory" && <UpdateInventory />}
+            {selectedOption === "updatePreferences" && <UpdatePreferences />}
         </>
     )
 }
