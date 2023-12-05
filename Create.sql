@@ -17,7 +17,9 @@ CREATE TABLE user (
     password VARCHAR(64) NOT NULL,
 	CONSTRAINT user_owns_fridge FOREIGN KEY (fridge)
 		REFERENCES fridge(fridge_id)
-        ON UPDATE CASCADE ON DELETE RESTRICT
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT valid_user_email_constraint CHECK (email LIKE '%@%.%__'),
+    CONSTRAINT valid_user_password CHECK (LENGTH(password) >= 8)
 );
 
 
@@ -120,22 +122,23 @@ CREATE TABLE chef (
     email		VARCHAR(64) NOT NULL,
 	CONSTRAINT chef_works_at FOREIGN KEY (restaurant)
 		REFERENCES restaurant(restaurant_id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT valid_chef_email_constraint CHECK (email LIKE '%@%.%__'),
+    CONSTRAINT valid_chef_password CHECK (LENGTH(password) >= 8)
 );
 
 
 drop table IF EXISTS recipe;
 CREATE TABLE recipe (
-    recipe_id INT PRIMARY KEY,
+    recipe_id INT PRIMARY KEY AUTO_INCREMENT,
     image VARCHAR(256),
     dish_name VARCHAR(64) NOT NULL,
-    description VARCHAR(128) NOT NULL,
-    total_calories INT NOT NULL,
-    meal_type		ENUM("Breakfast","Lunch","Dinner") NOT NULL,
+    description VARCHAR(128),
     chef			VARCHAR(64) NOT NULL,
 	CONSTRAINT recipe_has_chef FOREIGN KEY (chef)
 		REFERENCES chef(user_name)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT dish_chef_uniqueness UNIQUE(dish_name, chef)
 );
 
 CREATE TABLE recipe_contains_ingredients(
