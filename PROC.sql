@@ -290,6 +290,13 @@ BEGIN
 END $
 DELIMITER ;
 
+DELIMITER $
+CREATE PROCEDURE remove_cooking_instruction (IN recipe_id_p INT, IN step_number_p INT)
+BEGIN
+    DELETE FROM recipe_cooking_instructions WHERE recipe=recipe_id_p AND step_number=step_number_p;
+END $
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS add_recipe_flavour;
 DELIMITER $
 CREATE PROCEDURE add_recipe_flavour (IN recipe_p INT, IN flavour_p VARCHAR(64))
@@ -381,7 +388,29 @@ BEGIN
 END $
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS add_recipe_ingredient;
+DELIMITER $
+CREATE PROCEDURE add_recipe_ingredient (IN recipe_p INT, IN ingredient VARCHAR(64))
+BEGIN
+	INSERT INTO recipe_contains_ingredients VALUES(recipe_p, ingredient);
+END $
+DELIMITER ;
 
+DROP PROCEDURE IF EXISTS remove_recipe_ingredient;
+DELIMITER $
+CREATE PROCEDURE remove_recipe_ingredient (IN recipe_p INT, IN ingredient_p VARCHAR(64))
+BEGIN
+	DELETE FROM recipe_contains_ingredients WHERE recipe=recipe_p AND ingredient=ingredient_p;
+END $
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS get_chef_recipe;
+DELIMITER $
+CREATE PROCEDURE get_chef_recipe (IN user_name_p VARCHAR(64))
+BEGIN
+	SELECT * FROM recipe WHERE chef=user_name_p;
+END $
+DELIMITER ;
 
 CALL register_user('hrishi', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 'BLUE');
 CALL register_user('hari', 'password', 'Hari', 'Columbus', 'hari@gmail.com', 'RED');
