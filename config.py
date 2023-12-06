@@ -5,6 +5,6 @@ class Config:
     DB_HOST = "localhost"  # Database host
     DB_USER = "root"  # Database username
     DB_PASSWORD = "root"  # Database password
-    DB_NAME = "digidine_db"  # Database name
+    DB_NAME = "digidine"  # Database name
 
     # You can add other configuration settings as needed, like secret keys, API keys, etc.

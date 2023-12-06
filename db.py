@@ -38,3 +38,12 @@ def execute_read_query(connection, query):
     finally:
         cursor.close()
         connection.close()
+
+
+def execute_stored_procedure(proc_name, params):
+    connection = create_db_connection()
+    cursor = connection.cursor()
+    cursor.callproc(proc_name, params)
+    connection.commit()
+    cursor.close()
+    connection.close()
