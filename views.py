@@ -23,7 +23,7 @@ def register_chef():
 
         execute_stored_procedure('register_chef',
                                  [data['username'], data['password'], data['firstName'], data['lastName'],
-                                  data['email'], data['fridgeColor']])
+                                  data['email'], data['restaurantId']])
         return jsonify({"message": "Chef registered successfully"}), 201
     except mysql.connector.Error as err:
         # The error message from the stored procedure will be returned in the response
@@ -193,7 +193,6 @@ def get_custom_recipes(username):
 
 
 # Add Recipe
-@login_required
 def add_recipe():
     data = request.json
     chef_name = data['chef_name']
@@ -204,7 +203,6 @@ def add_recipe():
 
 
 # Update Recipe Image
-@login_required
 def update_recipe_image():
     data = request.json
     dish_name = data['dish_name']
@@ -215,7 +213,6 @@ def update_recipe_image():
 
 
 # Update Recipe Description
-@login_required
 def update_recipe_description():
     data = request.json
     dish_name = data['dish_name']
@@ -226,7 +223,6 @@ def update_recipe_description():
 
 
 # Remove Recipe
-@login_required
 def remove_recipe():
     data = request.json
     recipe_id = data['recipe_id']
@@ -235,7 +231,6 @@ def remove_recipe():
 
 
 # Add Cooking Instruction
-@login_required
 def add_cooking_instruction():
     data = request.json
     recipe_id = data['recipe_id']
@@ -245,7 +240,6 @@ def add_cooking_instruction():
 
 
 # Edit Cooking Instruction
-@login_required
 def edit_cooking_instruction():
     data = request.json
     recipe_id = data['recipe_id']
@@ -266,7 +260,6 @@ def remove_cooking_instruction():
 
 
 # Add Recipe Flavor
-@login_required
 def add_recipe_flavour():
     data = request.json
     recipe_id = data['recipe_id']
@@ -276,7 +269,6 @@ def add_recipe_flavour():
 
 
 # Remove Recipe Flavor
-@login_required
 def remove_recipe_flavour():
     data = request.json
     recipe_id = data['recipe_id']
@@ -310,7 +302,6 @@ def get_preferred_recipes(user_name):
 
 
 # Update Chef's Restaurant
-@login_required
 def update_chef_restaurant():
     data = request.json
     user_name = data['user_name']
@@ -325,15 +316,15 @@ def update_chef_restaurant():
 
 
 # Update Email Address
-@login_required
 def update_email_address():
     data = request.json
-    user_name = data['user_name']
+    user_name_p = data['user_name']
     new_email = data['new_email']
-
     connection = create_db_connection()
     if connection:
-        execute_stored_procedure('update_email_address', [user_name, new_email])
+        cursor = connection.cursor()
+        cursor.callproc('update_email_address', [user_name_p, new_email])
+        # execute_stored_procedure('update_email_address', [user_name_p, new_email])
         return jsonify({"message": "Email address updated successfully"}), 200
     else:
         return jsonify({"error": "Database connection failed"}), 500
@@ -350,6 +341,15 @@ def get_chef_recipes(user_name):
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
+def get_all_restaurants():
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.callproc('get_restaurants', [])
+        result = next(cursor.stored_results()).fetchall()
+        return jsonify(result), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
 
 def get_all_recipe_information(recipe_id):
     connection = create_db_connection()

@@ -17,5 +17,12 @@ SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM 
 END**
 DELIMITER ;
 
+drop procedure if exists get_restaurants;
+DELIMITER $
+CREATE PROCEDURE get_restaurants()
+BEGIN
+SELECT name FROM restaurant;
+END $
+DELIMITER ;
 CALL get_restriction_for_recipe(@rid);
 SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=1));  
