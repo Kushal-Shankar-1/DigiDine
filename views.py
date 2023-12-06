@@ -354,20 +354,34 @@ def get_chef_recipes(user_name):
 def get_all_recipe_information():
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        # Fetch recipe information
-        cursor.callproc('get_recipe_information', [])
-        recipes = next(cursor.stored_results()).fetchall()
+        try:
+            cursor = connection.cursor(dictionary=True)
+            # Fetch all recipes
+            cursor.callproc('get_all_recipes', [])
+            recipes = next(cursor.stored_results()).fetchall()
 
-        # For each recipe, fetch dietary restrictions
-        for recipe in recipes:
-            recipe_id = recipe['recipe_id']
-            cursor.callproc('get_restriction_for_recipe', [recipe_id])
-            restrictions = next(cursor.stored_results()).fetchall()
+            # For each recipe, fetch detailed information and dietary restrictions
+            for recipe in recipes:
+                recipe_id = recipe['recipe_id']
 
-            # Add the restrictions to the recipe dictionary
-            recipe['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
+                # Fetch detailed information
+                cursor.callproc('get_recipe_information', [recipe_id])
+                detailed_info = next(cursor.stored_results()).fetchall()
 
-        return jsonify(recipes), 200
+                # Fetch dietary restrictions for the recipe
+                cursor.callproc('get_restriction_for_recipe', [recipe_id])
+                restrictions = next(cursor.stored_results()).fetchall()
+
+                # Add detailed information and restrictions to the recipe dictionary
+                if detailed_info:
+                    recipe.update(detailed_info[0])
+                recipe['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
+
+            return jsonify(recipes), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
