@@ -1,34 +1,9 @@
 import mysql
 from flask import request, jsonify
-from db import create_db_connection, execute_stored_procedure
 from flask import session
+
+from db import create_db_connection, execute_stored_procedure
 from utils import login_required
-
-
-def login():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-
-    try:
-        connection = create_db_connection()
-        if connection is None:
-            raise Exception("Failed to connect to the database")
-
-        cursor = connection.cursor()
-        cursor.callproc('login_user', [username, password])
-        result = next(cursor.stored_results()).fetchall()
-
-        if result:
-            session['user'] = result[0]['user_name']  # Assuming 'user_name' is part of the result
-            return jsonify({"message": "Login successful"}), 200
-        else:
-            return jsonify({"error": "Invalid credentials"}), 401
-    except mysql.connector.Error as err:
-        return jsonify({"error": str(err)}), 400
-    finally:
-        cursor.close()
-        connection.close()
 
 
 def register_user():
@@ -65,13 +40,16 @@ def sign_in():
         if connection is None:
             raise Exception("Failed to connect to the database")
 
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
         cursor.callproc('login_user', [username, password])
-        result = next(cursor.stored_results()).fetchall()  # Fetch the result of the SELECT statement
+        result = next(cursor.stored_results()).fetchall()
 
         if result:
-            user_info = result[0]  # Assuming the result is a tuple containing user/chef details
-            return jsonify(user_info), 200
+            user_info = result[0]  # Convert the tuple to a dictionary
+            session['user'] = user_info['user_name']  # Store the username in session for session management
+
+            # Include additional user info as required by your application
+            return jsonify({"message": "Login successful", "user_info": user_info}), 200
         else:
             return jsonify({"error": "Invalid credentials"}), 401
     except mysql.connector.Error as err:
@@ -89,13 +67,11 @@ def get_dietary_restrictions(username):
         if connection is None:
             raise Exception("Failed to connect to the database")
 
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
         cursor.callproc('get_user_dietary_restrictions', [username])
         result = next(cursor.stored_results()).fetchall()
 
-        restrictions = [{"restrictionName": row[0], "description": row[1], "hasRestriction": bool(row[2])} for row in
-                        result]
-        return jsonify(restrictions), 200
+        return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -104,7 +80,7 @@ def get_dietary_restrictions(username):
 
 
 def set_dietary_restrictions(username):
-    data = request.json  
+    data = request.json
     try:
         connection = create_db_connection()
         if connection is None:
@@ -112,7 +88,7 @@ def set_dietary_restrictions(username):
 
         cursor = connection.cursor()
         cursor.callproc('set_user_dietary_restrictions',
-                            [username, data['restrictionName'], data['hasRestriction']])
+                        [username, data['restrictionName'], data['hasRestriction']])
         cursor.close()
         connection.commit()
         return jsonify({"message": "Dietary restrictions updated successfully"}), 200
@@ -128,12 +104,11 @@ def get_user_flavour(username):
         if connection is None:
             raise Exception("Failed to connect to the database")
 
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
         cursor.callproc('get_user_flavour', [username])
         result = next(cursor.stored_results()).fetchall()
 
-        flavours = [{"flavourName": row[0], "hasFlavourPref": bool(row[1])} for row in result]
-        return jsonify(flavours), 200
+        return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -142,12 +117,11 @@ def get_user_flavour(username):
 
 
 def set_user_flavour(username):
-    data = request.json  
+    data = request.json
     try:
         connection = create_db_connection()
         if connection is None:
             raise Exception("Failed to connect to the database")
-
 
         cursor = connection.cursor()
         cursor.callproc('set_user_flavour', [username, data['flavourName'], data['isPreferred']])
@@ -299,3 +273,69 @@ def remove_recipe_flavour():
     flavour = data['flavour']
     execute_stored_procedure('remove_recipe_flavour', [recipe_id, flavour])
     return jsonify({"message": "Flavour removed from recipe successfully"}), 200
+
+
+# Fetch Recipes Based on Fridge Ingredients
+def get_recipes_by_fridge(user_name):
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.callproc('all_recipes_with_fridge_ingredients', [user_name])
+        result = next(cursor.stored_results()).fetchall()
+        return jsonify(result), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
+
+
+# Fetch Preferred Recipes Based on User Preferences and Fridge Ingredients
+def get_preferred_recipes(user_name):
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.callproc('preferred_recipes_with_fridge_ingredients', [user_name])
+        result = next(cursor.stored_results()).fetchall()
+        return jsonify(result), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
+
+
+# Update Chef's Restaurant
+@login_required
+def update_chef_restaurant():
+    data = request.json
+    user_name = data['user_name']
+    restaurant_id = data['restaurant_id']
+
+    connection = create_db_connection()
+    if connection:
+        execute_stored_procedure('update_chef_restaurant', [user_name, restaurant_id])
+        return jsonify({"message": "Chef's restaurant updated successfully"}), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
+
+
+# Update Email Address
+@login_required
+def update_email_address():
+    data = request.json
+    user_name = data['user_name']
+    new_email = data['new_email']
+
+    connection = create_db_connection()
+    if connection:
+        execute_stored_procedure('update_email_address', [user_name, new_email])
+        return jsonify({"message": "Email address updated successfully"}), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
+
+
+# Fetch Recipes Created by Chef
+def get_chef_recipes(user_name):
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.callproc('get_chef_recipe', [user_name])
+        result = next(cursor.stored_results()).fetchall()
+        return jsonify(result), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
