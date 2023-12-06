@@ -12,18 +12,59 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import UpdatePreferences from './UpdatePreferences';
 import UpdateInventory from './UpdateInventory';
+import axios from 'axios';
 
 
 export default function UserPage() {
 
     const [selectedOption, setSelectedOption] = useState('explore');
     const [exploreType, setExploreType] = useState('all');
+    const [data, setData] = useState([]);
+    const [allData, setAllData] = useState([]);
+    const [inventoryData, setInventoryData] = useState([]);
+    const [preferencesData, setPreferencesData] = useState([]);
+    const [customData, setCustomData] = useState([]);
 
     const handleOption = (event) => {
         setExploreType(event.target.value);
     }
 
     const [disableButtons, setDisableButtons] = useState(false);
+    useEffect(() => {
+        axios.get('http://localhost:5000/recipes/all')
+            .then((response) => {
+                console.log("RESPONSE AXIOS 1",response);
+                setAllData(response.data);
+                // sessionStorage.setItem('user', JSON.stringify(response.data));
+                // sessionStorage.setItem('loggedIn', true);
+            })
+            .catch((error) => {
+                console.log(error);
+                // alert('Invalid Credentials');
+            });
+
+            axios.get('http://localhost:5000/recipes/custom/hari')
+            .then((response) => {
+                console.log("RESPONSE AXIOS 2",response);
+                setCustomData(response.data);
+                
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+            // axios.get('http://localhost:5000/recipes/custom/hari')
+            // .then((response) => {
+            //     console.log("RESPONSE AXIOS 2",response);
+            //     setCustomData(response.data);
+                
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            // });
+
+    }
+    );
     return (
         <>
             <Box
