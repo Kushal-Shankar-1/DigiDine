@@ -17,7 +17,9 @@ CREATE TABLE user (
     password VARCHAR(64) NOT NULL,
 	CONSTRAINT user_owns_fridge FOREIGN KEY (fridge)
 		REFERENCES fridge(fridge_id)
-        ON UPDATE CASCADE ON DELETE RESTRICT
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT valid_user_email_constraint CHECK (email LIKE '%@%.%__'),
+    CONSTRAINT valid_user_password CHECK (LENGTH(password) >= 8)
 );
 
 
@@ -91,13 +93,7 @@ CREATE TABLE ingredient_has_restriction(
 		PRIMARY KEY (ingredient, diet)
 );
 
-
-CREATE TABLE difficulty(
-	level				INT PRIMARY KEY,
-    badge				VARCHAR(64) NOT NULL
-);
-
-
+#Remove
 CREATE TABLE address(
 	address_id			INT			PRIMARY KEY,
     street_no			INT 		NOT NULL,
@@ -106,6 +102,7 @@ CREATE TABLE address(
     state				VARCHAR(64) NOT NULL
 );
 
+#Remove
 CREATE TABLE restaurant(
 	restaurant_id		INT 		PRIMARY KEY,
     name				VARCHAR(64) NOT NULL,
@@ -125,27 +122,23 @@ CREATE TABLE chef (
     email		VARCHAR(64) NOT NULL,
 	CONSTRAINT chef_works_at FOREIGN KEY (restaurant)
 		REFERENCES restaurant(restaurant_id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT valid_chef_email_constraint CHECK (email LIKE '%@%.%__'),
+    CONSTRAINT valid_chef_password CHECK (LENGTH(password) >= 8)
 );
 
 
-drop table recipe;
+drop table IF EXISTS recipe;
 CREATE TABLE recipe (
-    recipe_id INT PRIMARY KEY,
+    recipe_id INT PRIMARY KEY AUTO_INCREMENT,
     image VARCHAR(256),
     dish_name VARCHAR(64) NOT NULL,
-    description VARCHAR(128) NOT NULL,
-    cooking_instruction VARCHAR(128) NOT NULL,
-    total_calories INT NOT NULL,
-    meal_type		ENUM("Breakfast","Lunch","Dinner") NOT NULL,
-    difficulty		INT	NOT NULL,
+    description VARCHAR(128),
     chef			VARCHAR(64) NOT NULL,
-	CONSTRAINT recipe_has_difficulty FOREIGN KEY (difficulty)
-		REFERENCES difficulty(level)
-        ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT recipe_has_chef FOREIGN KEY (chef)
 		REFERENCES chef(user_name)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT dish_chef_uniqueness UNIQUE(dish_name, chef)
 );
 
 CREATE TABLE recipe_contains_ingredients(
@@ -161,41 +154,17 @@ CREATE TABLE recipe_contains_ingredients(
 		PRIMARY KEY (recipe, ingredient)
 );
 
-CREATE TABLE ingredient_type(
-	ingredient_type_id		INT			PRIMARY KEY,
-    category				VARCHAR(64) NOT NULL,
-    storage_type			VARCHAR(64),
-    ingredient				VARCHAR(64),
-	CONSTRAINT contains_ingredient FOREIGN KEY (ingredient)
-		REFERENCES ingredient(ingredient_name)
-        ON UPDATE CASCADE ON DELETE CASCADE
-);
+#Remove/merge to ingredient
+-- CREATE TABLE ingredient_type(
+-- 	ingredient_type_id		INT			PRIMARY KEY,
+--     category				VARCHAR(64) NOT NULL,
+--     storage_type			VARCHAR(64),
+--     ingredient				VARCHAR(64),
+-- 	CONSTRAINT contains_ingredient FOREIGN KEY (ingredient)
+-- 		REFERENCES ingredient(ingredient_name)
+--         ON UPDATE CASCADE ON DELETE CASCADE
+-- );
 
-CREATE TABLE review(
-	rating_value		DECIMAL,
-    comments			VARCHAR(64) NOT NULL,
-    user				VARCHAR(64) 		NOT NULL,
-    recipe				INT 		NOT NULL,
-	CONSTRAINT user_reviews FOREIGN KEY (user)
-		REFERENCES user(user_name)
-        ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT recipe_review FOREIGN KEY (recipe)
-		REFERENCES recipe(recipe_id)
-        ON UPDATE CASCADE ON DELETE CASCADE    
-);
-
-CREATE TABLE recipe_favourite_of(
-	recipe 		INT NOT NULL,
-    user		VARCHAR(64) NOT NULL,
-	CONSTRAINT user_likes FOREIGN KEY (user)
-		REFERENCES user(user_name)
-        ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT recipie_favourite_of FOREIGN KEY (recipe)
-		REFERENCES recipe(recipe_id)
-        ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT pk_contains
-		PRIMARY KEY (recipe, user)
-);
 
 CREATE TABLE recipe_has_flavour(
 	recipe 		INT NOT NULL,
@@ -210,12 +179,15 @@ CREATE TABLE recipe_has_flavour(
 		PRIMARY KEY (recipe, flavour)
 );
 
-CREATE TABLE note(
-	note_id			INT,
-    fridge			INT,
-    color			VARCHAR(64) NOT NULL,
-    content			VARCHAR(64) NOT NULL,
-	CONSTRAINT note_stuck_on FOREIGN KEY (fridge)
-		REFERENCES fridge(fridge_id)
-        ON UPDATE CASCADE ON DELETE CASCADE    
-);
+CREATE TABLE recipe_cooking_instructions(
+	recipe INT NOT NULL,
+    step_number INT NOT NULL,
+    step_description VARCHAR(64) NOT NULL,
+    CONSTRAINT recipe_instruction FOREIGN KEY (recipe)
+		REFERENCES recipe(recipe_id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT instruction_key PRIMARY KEY (recipe,step_number)
+    );
+    
+
+

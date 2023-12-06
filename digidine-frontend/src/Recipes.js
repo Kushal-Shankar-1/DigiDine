@@ -1,60 +1,55 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import ExpandRecipe from './ExpandRecipe';
+import EditRecipe from './EditRecipe';
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
-export default function Recipes() {
-    
+export default function Recipes(props) {
+  const [expandedView, setExpandedView] = useState(false);
+  const [editView, setEditView] = useState(false);
+  const [data, setData] = useState([]);
+  const [isChef, setIsChef] = useState(props.isChef);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+
+  const handleBack = () => {
+    setExpandedView(false);
+    setEditView(false);
+    props.disableButtons(false);
+  }
+
+  const handleExpand = () => {
+    setExpandedView(true);
+    props.disableButtons(true);
+  }
+
+  const handleEdit = () => {
+    setEditView(true);
+    props.disableButtons(true);
+  }
+
   return (
+
     
-      <main>
-        {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-              style={{marginTop: '10%'}}
-            >
-              Hungry? Of course, you are!
-            </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Let's explore some food options! Check out what the chefs in your area are cooking up! Select 
-              the ingredients you have stocked up in your fridge to see what all you can make right now!
-            </Typography>
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button variant="contained">Explore Dishes</Button>
-              <Button variant="outlined">Select Items From Fridge</Button>
-            </Stack>
-          </Container>
-        </Box>
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
+      <Container sx={{ py: 8 }} maxWidth="md">
+        {expandedView ?
+          <>
+            <ExpandRecipe />
+            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
+          </>
+          : editView? 
+           <><EditRecipe /> 
+           <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
+           </>: 
           <Grid container spacing={4}>
             {cards.map((card) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
@@ -79,14 +74,14 @@ export default function Recipes() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">View</Button>
-                    <Button size="small">Edit</Button>
+                    <Button size="small" onClick={handleExpand}>View</Button>
+                    {isChef == true && <Button size="small" onClick={handleEdit}>Edit</Button>}
                   </CardActions>
                 </Card>
               </Grid>
             ))}
-          </Grid>
-        </Container>
-      </main>
+          </Grid>}
+      </Container>
+    
   )
 } 
