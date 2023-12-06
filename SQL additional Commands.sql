@@ -28,7 +28,7 @@ drop procedure if exists get_restaurants;
 DELIMITER $
 CREATE PROCEDURE get_restaurants()
 BEGIN
-SELECT name FROM restaurant;
+SELECT * FROM restaurant;
 END $
 DELIMITER ;
 CALL get_restriction_for_recipe(@rid);

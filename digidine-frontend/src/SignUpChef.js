@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, TextField, Button, Menu, MenuItem, Select } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUpChef = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [restaurants, setRestaurants] = useState([]);
-    const [selectedRestaurant, setSelectedRestaurant] = useState('');
+    const [selectedRestaurant, setSelectedRestaurant] = useState('Select your restaurant');
     const [isError, setIsError] = useState(true);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [username, setUsername] = useState('');
 
     const navigate = useNavigate();
+    useEffect(() => {
+        axios.get('http://localhost:5000/restaurants')
+            .then((response) => {
+                setRestaurants(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+
+            })},[]);
 
     const handleFirstNameChange = (event) => {
         setFirstName(event.target.value);
@@ -35,22 +45,31 @@ const SignUpChef = () => {
     };
 
     const handleSubmit = () => {
-        fetch('http://localhost:5000/api/chef', {
+        if (password !== confirmPassword) {
+            alert("Passwords don't match");
+            return;
+        }
+        console.log("Selected Restaurant",selectedRestaurant);
+        fetch('http://localhost:5000/register/chef', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                username: username,
+                password: password,
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                restaurantId: selectedRestaurant
+                restaurantId: selectedRestaurant.restaurant_id
             }),
         })
             .then((response) => {
                 if (response.ok) {
                     setIsError(false);
+                    navigate('/');
                     return response.json();
+
                 } else {
                     setIsError(true);
                     throw new Error('Something went wrong...');
@@ -62,7 +81,6 @@ const SignUpChef = () => {
             .catch((error) => {
                 console.error('Error:', error);
             })
-            navigate('/');
     };
 
 
@@ -78,47 +96,49 @@ const SignUpChef = () => {
                 <div>
                     <Typography variant="h4" style={{marginBottom: '10px'}}>Sign Up</Typography>
                     <form>
-                    <TextField
+                    <TextField fullWidth
                                 label="Username"
                                 value={username}
                                 onChange={e=>setUsername(e.target.value)}
                                 style={{ marginBottom: '10px' }}
                             />
-                        <TextField
+                        <TextField fullWidth
                             label="First Name"
                             value={firstName}
                             onChange={handleFirstNameChange}
                             style={{ marginBottom: '10px', marginRight: '10px' }}
                         />
-                        <TextField
+                        <TextField fullWidth
                             label="Last Name"
                             value={lastName}
                             onChange={handleLastNameChange}
                             style={{ marginBottom: '10px', marginRight: '10px' }}
                         />
-                        <TextField
+                        <TextField fullWidth
                             label="Email"
                             value={email}
                             onChange={handleContactChange}
                             style={{ marginBottom: '10px' }}
                         />
                         <Typography><i>Restaurant:</i> </Typography>
-                        <Select style={{ marginRight: '11%' }}
-                            value={selectedRestaurant}
-                            onChange={(e) => setSelectedRestaurant(e.target.value)}
+                        <Select style={{ marginBottom: '10px' }}
+                            value={selectedRestaurant!==''? selectedRestaurant.name : "Select you restaurant"} fullWidth
                         >
-                             {restaurants.map((restaurant) => 
-                                <MenuItem value={restaurant.restaurantId}>{restaurant.name}</MenuItem>)
-                             }
+                            <MenuItem value={'Select your restaurant'} disabled>Select your restaurant</MenuItem>
+                            {restaurants.map((restaurant) => 
+                                <MenuItem onClick={(e) => setSelectedRestaurant(restaurant)} value={restaurant.name}>{restaurant.name} {restaurant.cuisin_type !== undefined? ' - ' +restaurant.cuisin_type:''}</MenuItem>
+                            )}
                         </Select>
                         <TextField
                                 label="Password"
-                                value={password}
+                                value={password} fullWidth
+                                type='password'
                                 onChange={handlePasswordChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="Confirm Password"
+                                type='password'
                                 value={confirmPassword}
                                 onChange={handleConfirmPasswordChange}
                                 style={{ marginBottom: '10px' }}
