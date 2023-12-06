@@ -349,3 +349,25 @@ def get_chef_recipes(user_name):
         return jsonify(result), 200
     else:
         return jsonify({"error": "Database connection failed"}), 500
+
+
+def get_all_recipe_information():
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        # Fetch recipe information
+        cursor.callproc('get_recipe_information', [])
+        recipes = next(cursor.stored_results()).fetchall()
+
+        # For each recipe, fetch dietary restrictions
+        for recipe in recipes:
+            recipe_id = recipe['recipe_id']
+            cursor.callproc('get_restriction_for_recipe', [recipe_id])
+            restrictions = next(cursor.stored_results()).fetchall()
+
+            # Add the restrictions to the recipe dictionary
+            recipe['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
+
+        return jsonify(recipes), 200
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
