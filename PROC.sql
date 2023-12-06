@@ -417,6 +417,7 @@ BEGIN
       AND step_number = step_number_p;
 END $
 DELIMITER ;
+DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 
 DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 DELIMITER $
