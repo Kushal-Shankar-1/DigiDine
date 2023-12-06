@@ -1,5 +1,5 @@
 // App.js - Entry point
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -10,39 +10,27 @@ import Header from './Header';
 import Footer from './Footer';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ProfilePage from './ProfilePage';
 
 const defaultTheme = createTheme();
 
-// import LoggedInPortal from './LoggedInPortal';
-// import Fridge from './Fridge';
-// import CreateDish from './CreateDish';
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
+  // const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
   // Functions to handle login, logout, and fridge modifications
-
   return (
     <Router>
         <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Header setLoggedIn={setLoggedIn} />
+      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       <Routes>
         <Route path="/" element={<Home loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path="/signup"  element={<SignUp />} />
         <Route path="/signupOption"  element={<SignUpOption />} />
         <Route path="/signupchef"  element={<SignUpChef />} />
+        <Route path="/profile"  element={<ProfilePage setLoggedIn={setLoggedIn} />} />
     
-        {/*
-        <Route path="/portal" exact>
-          <LoggedInPortal loggedIn={loggedIn} fridgeItems={fridgeItems} />
-        </Route>
-        <Route path="/fridge" exact>
-          <Fridge fridgeItems={fridgeItems} setFridgeItems={setFridgeItems} />
-        </Route>
-        <Route path="/create-dish" exact>
-          <CreateDish fridgeItems={fridgeItems} />
-        </Route> */}
       </Routes>
       <Footer /> </ThemeProvider>
     </Router>

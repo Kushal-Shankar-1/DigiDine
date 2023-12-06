@@ -1,30 +1,10 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button, Checkbox, Container, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, Typography, Checkbox, Container, Grid } from '@mui/material';
 
 const UpdatePreferences = () => {
-    const [step, setStep] = useState(1);
-    const [name, setName] = useState('');
-    const [contact, setContact] = useState('');
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
     const [flavorPreferences, setFlavorPreferences] = useState([]);
-    const navigate = useNavigate();
 
-    const handleNameChange = (event) => {
-        setName(event.target.value);
-    };
-
-    const handleContactChange = (event) => {
-        setContact(event.target.value);
-    };
-
-    const handleNext = () => {
-        setStep(step + 1);
-    };
-
-    const handleBack = () => {
-        setStep(step - 1);
-    };
 
     const handleDietaryRestrictionsChange = (restriction) => {
         if (dietaryRestrictions.includes(restriction)) {
@@ -42,10 +22,6 @@ const UpdatePreferences = () => {
         }
     };
 
-    const handleSubmit = () => {
-        navigate('/');
-    }
-
     return (
         <Container maxWidth="md">
             <Grid container spacing={3} justifyContent="center">
@@ -54,7 +30,7 @@ const UpdatePreferences = () => {
                     <div>
                         <Card
                             style={{
-                                backgroundColor: dietaryRestrictions.includes('Gluten-free') ? '#FFDAB9' : 'white',
+                                backgroundColor: dietaryRestrictions.includes('Gluten-free') ? 'MistyRose' : 'white',
                             }}
                             onClick={() => handleDietaryRestrictionsChange('Gluten-free')}
                         >
@@ -68,7 +44,7 @@ const UpdatePreferences = () => {
                         </Card>
                         <Card
                             style={{
-                                backgroundColor: dietaryRestrictions.includes('Vegetarian') ? '#FFDAB9' : 'white',
+                                backgroundColor: dietaryRestrictions.includes('Vegetarian') ? 'MistyRose' : 'white',
                             }}
                             onClick={() => handleDietaryRestrictionsChange('Vegetarian')}
                         >
@@ -82,7 +58,7 @@ const UpdatePreferences = () => {
                         </Card>
                         <Card
                             style={{
-                                backgroundColor: dietaryRestrictions.includes('Vegan') ? '#FFDAB9' : 'white',
+                                backgroundColor: dietaryRestrictions.includes('Vegan') ? 'MistyRose' : 'white',
                             }}
                             onClick={() => handleDietaryRestrictionsChange('Vegan')}
                         >
@@ -96,7 +72,7 @@ const UpdatePreferences = () => {
                         </Card>
                         <Card
                             style={{
-                                backgroundColor: dietaryRestrictions.includes('Lactose Intolerant') ? '#FFDAB9' : 'white',
+                                backgroundColor: dietaryRestrictions.includes('Lactose Intolerant') ? 'MistyRose' : 'white',
                             }}
                             onClick={() => handleDietaryRestrictionsChange('Lactose Intolerant')}
                         >
@@ -115,7 +91,7 @@ const UpdatePreferences = () => {
                     <Typography variant="h5">Flavor Preferences</Typography>
                     <div>
                         <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Mild') ? 'lightblue' : 'white' }}
+                            style={{ backgroundColor: flavorPreferences.includes('Mild') ? 'PapayaWhip' : 'white' }}
                             onClick={() => handleFlavorPreferencesChange('Mild')}
                         >
                             <CardContent>
@@ -127,7 +103,7 @@ const UpdatePreferences = () => {
                             </CardContent>
                         </Card>
                         <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Spicy') ? 'lightblue' : 'white' }}
+                            style={{ backgroundColor: flavorPreferences.includes('Spicy') ? 'PapayaWhip' : 'white' }}
                             onClick={() => handleFlavorPreferencesChange('Spicy')}
                         >
                             <CardContent>
@@ -139,7 +115,7 @@ const UpdatePreferences = () => {
                             </CardContent>
                         </Card>
                         <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Medium') ? 'lightblue' : 'white' }}
+                            style={{ backgroundColor: flavorPreferences.includes('Medium') ? 'PapayaWhip' : 'white' }}
                             onClick={() => handleFlavorPreferencesChange('Medium')}
                         >
                             <CardContent>

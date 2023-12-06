@@ -40,6 +40,7 @@ export default function SignIn(props) {
       email: data.get('email'),
       password: data.get('password'),
     });
+    sessionStorage.setItem('loggedIn', true);
     props.setLoggedIn(true);
   };
 

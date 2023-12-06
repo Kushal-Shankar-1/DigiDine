@@ -9,18 +9,16 @@ import ChefPage from './ChefPage';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export default function Home(props) {
-    const [loggedIn, setLoggedIn] = useState();
+    const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
     const [userType, setUserType] = useState('user');
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
             setLoggedIn(true);
         }
-        console.log("PROPS UPDATED", props);
+        props.setLoggedIn(loggedIn);
     }
     , [loggedIn]);
 

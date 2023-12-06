@@ -10,47 +10,60 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import UserIcon from '@mui/icons-material/Person';
 import Logout from '@mui/icons-material/Logout';
-
-
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Header(props) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-        };
-    const handleClose = () => {
-        setAnchorEl(null);
-        };
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const [loggedIn, setLoggedIn] = React.useState(props.loggedIn);
+  React.useEffect(() => {
+    setLoggedIn(props.loggedIn);
+    console.log("PROPS UPDATED IN HEADER", props);
+  }, []);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-        const handleLogOut = () => {
-            console.log("logging out", props)
-            props.setLoggedIn(false);
-            handleClose();
-        };
-        return (
-        <AppBar position="absolute">
-        <Toolbar >
-        <Typography style={{justifySelf: 'start', marginRight: '50%'}} variant="h6" color="inherit" noWrap>
-        DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
-          </Typography>
-          <UserIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Username
-          </Typography>
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Toolbar>
-        <Menu
+  const handleProfile = () => {
+    navigate('/profile');
+    handleClose();
+  }
+
+  const handleLogOut = () => {
+    console.log("logging out", props)
+    sessionStorage.setItem('loggedIn', false);
+    props.setLoggedIn(false);
+    navigate('/');
+    window.location.reload();
+    handleClose();
+  };
+  return (
+    <AppBar position="absolute">
+      <Toolbar >
+        <Typography style={{ justifySelf: 'start', marginRight: '50%' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
+          DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
+        </Typography>
+        <UserIcon sx={{ mr: 2 }} />
+        <Typography variant="h6" color="inherit" noWrap>
+          Username
+        </Typography>
+        <IconButton
+          onClick={handleClick}
+          size="small"
+          sx={{ ml: 2 }}
+          aria-controls={open ? 'account-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+        >
+          <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+        </IconButton>
+      </Toolbar>
+      <Menu
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
@@ -85,17 +98,17 @@ export default function Header(props) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleProfile}>
           <Avatar /> Profile
         </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleLogOut}>
+        {props.loggedIn == true && <Divider />}
+        {props.loggedIn == true && <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Logout
-        </MenuItem>
+        </MenuItem>}
       </Menu>
-      </AppBar>
-    );
+    </AppBar>
+  );
 }
