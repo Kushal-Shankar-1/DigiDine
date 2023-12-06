@@ -2,30 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Checkbox, Container, Grid } from '@mui/material';
 import axios from 'axios';
 
-const UpdatePreferences = () => {
+const UpdatePreferences = (props) => {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
     const [selectedDietaryRestrictions, setSelectedDietaryRestrictions] = useState([]);
     const [selectedFlavorPreferences, setSelectedFlavorPreferences] = useState([]);
     const [flavorPreferences, setFlavorPreferences] = useState([]);
+    const [user, setUser] = useState(props.user);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/get-dietary-restrictions/hari`)
+        axios.get(`http://localhost:5000/get-dietary-restrictions/${user}`)
             .then((response) => {
                 setDietaryRestrictions(response.data);
 
-                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.hasRestriction == true).map((restriction) => restriction.restrict_name));
+                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.has_restriction == true).map((restriction) => restriction.restrict_name));
+                console.log("SELECTED DIETARY RESTRICTIONS", response.data.filter((restriction) => restriction.has_restriction == true).map((restriction) => restriction.restrict_name));
 
             })
-        axios.get(`http://localhost:5000/get-user-flavour/hari`)
+        axios.get(`http://localhost:5000/get-user-flavour/${user}`)
             .then((response) => {
                 setFlavorPreferences(response.data);
-                setSelectedFlavorPreferences(response.data.filter((preference) => preference.hasFlavourPref == true).map((preference) => preference.flavour_name));
+                setSelectedFlavorPreferences(response.data.filter((preference) => preference.has_flavour_pref == true).map((preference) => preference.flavour_name));
             })
     }, []);
 
     const handleDietaryRestrictionsChange = (restriction) => {
         if (selectedDietaryRestrictions.includes(restriction)) {
-            axios.post(`http://localhost:5000/set_dietary_restrictions/hari`, {
+            axios.post(`http://localhost:5000/set_dietary_restrictions/${user}`, {
                 restrictionName: restriction,
                 hasRestriction: false
             })
@@ -35,7 +37,7 @@ const UpdatePreferences = () => {
                 })
 
         } else {
-            axios.post(`http://localhost:5000/set_dietary_restrictions/hari`, {
+            axios.post(`http://localhost:5000/set_dietary_restrictions/${user}`, {
                 restrictionName: restriction,
                 hasRestriction: true
             })
@@ -48,7 +50,7 @@ const UpdatePreferences = () => {
 
     const handleFlavorPreferencesChange = (preference) => {
         if (selectedFlavorPreferences.includes(preference)) {
-            axios.post(`http://localhost:5000/set-user-flavour/hari`, {
+            axios.post(`http://localhost:5000/set-user-flavour/${user}`, {
                 flavourName: preference,
                 isPreferred: false
             })
@@ -57,7 +59,7 @@ const UpdatePreferences = () => {
                         setSelectedFlavorPreferences(selectedFlavorPreferences.filter(p => p !== preference));
         })}
          else {
-            axios.post(`http://localhost:5000/set-user-flavour/hari`, {
+            axios.post(`http://localhost:5000/set-user-flavour/${user}`, {
                 flavourName: preference,
                 isPreferred: true
             })
@@ -71,6 +73,7 @@ const UpdatePreferences = () => {
 
     return (
         <Container maxWidth="md">
+            {console.log("USER IN UPDATE PREFERENCES", dietaryRestrictions, selectedDietaryRestrictions, flavorPreferences, selectedFlavorPreferences)}
             <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={6}>
                     <Typography variant="h5">Dietary Restrictions</Typography>

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Container, Grid, Paper, Typography } from '@mui/material';
 import axios from 'axios';
 
-const UpdateInventory = () => {
+const UpdateInventory = (props) => {
     const [currentIngredients, setCurrentIngredients] = useState([]);
     const [availableIngredients, setAvailableIngredients] = useState([]);
-    const [fridgeId, setFridgeId] = useState(1);
+    const [fridgeId, setFridgeId] = useState(props.fridgeId);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/fridge/${fridgeId}/ingredients`)

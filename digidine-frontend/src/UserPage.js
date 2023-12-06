@@ -150,8 +150,8 @@ export default function UserPage(props) {
                 </Container>
             </Box>
             {selectedOption === "explore" && <Recipes data={data} isChef={false} disableButtons={setDisableButtons} />}
-            {selectedOption === "updateInventory" && <UpdateInventory />}
-            {selectedOption === "updatePreferences" && <UpdatePreferences />}
+            {selectedOption === "updateInventory" && <UpdateInventory fridgeId={user.fridge}/>}
+            {selectedOption === "updatePreferences" && <UpdatePreferences user={user.user_name} />}
         </>
     )
 }
