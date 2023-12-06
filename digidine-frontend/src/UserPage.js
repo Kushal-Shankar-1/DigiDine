@@ -23,6 +23,7 @@ export default function UserPage() {
         setExploreType(event.target.value);
     }
 
+    const [disableButtons, setDisableButtons] = useState(false);
     return (
         <>
             <Box
@@ -53,9 +54,9 @@ export default function UserPage() {
                         spacing={2}
                         justifyContent="center"
                     >
-                        <Button variant={selectedOption === "explore" ? "contained" : "outlined"} onClick={() => setSelectedOption("explore")}>Explore Dishes</Button>
-                        <Button variant={selectedOption === "updateInventory" ? "contained" : "outlined"} onClick={() => setSelectedOption("updateInventory")}>Update Inventory</Button>
-                        <Button variant={selectedOption === "updatePreferences" ? "contained" : "outlined"} onClick={() => setSelectedOption("updatePreferences")}>Update Preferences</Button>
+                        <Button disabled={disableButtons} variant={selectedOption === "explore" ? "contained" : "outlined"} onClick={() => setSelectedOption("explore")}>Explore Dishes</Button>
+                        <Button disabled={disableButtons} variant={selectedOption === "updateInventory" ? "contained" : "outlined"} onClick={() => setSelectedOption("updateInventory")}>Update Inventory</Button>
+                        <Button disabled={disableButtons} variant={selectedOption === "updatePreferences" ? "contained" : "outlined"} onClick={() => setSelectedOption("updatePreferences")}>Update Preferences</Button>
                     </Stack>
 
                     {selectedOption === "explore" &&
@@ -65,7 +66,7 @@ export default function UserPage() {
                             spacing={2}
                             justifyContent="center"
                         >
-                            <FormControl>
+                            <FormControl disabled={disableButtons} >
                                 <FormLabel>Filter Recipes</FormLabel>
                                 <RadioGroup
                                     row
@@ -82,7 +83,7 @@ export default function UserPage() {
                     }
                 </Container>
             </Box>
-            {selectedOption === "explore" && <Recipes />}
+            {selectedOption === "explore" && <Recipes isChef={false} disableButtons={setDisableButtons} />}
             {selectedOption === "updateInventory" && <UpdateInventory />}
             {selectedOption === "updatePreferences" && <UpdatePreferences />}
         </>

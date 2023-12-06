@@ -31,7 +31,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn(props) {
-  
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -62,7 +62,7 @@ export default function SignIn(props) {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square style={{paddingTop:'10%'}}>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square style={{ paddingTop: '10%' }}>
           <Box
             sx={{
               my: 8,
@@ -114,9 +114,9 @@ export default function SignIn(props) {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </Grid>
                 <Grid item>
                   <Link href="/signupOption" variant="body2">
@@ -124,7 +124,6 @@ export default function SignIn(props) {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>

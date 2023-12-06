@@ -1,5 +1,5 @@
 // App.js - Entry point
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -16,7 +16,6 @@ const defaultTheme = createTheme();
 
 
 const App = () => {
-  // const [loggedIn, setLoggedIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
   // Functions to handle login, logout, and fridge modifications
   return (
@@ -30,9 +29,8 @@ const App = () => {
         <Route path="/signupOption"  element={<SignUpOption />} />
         <Route path="/signupchef"  element={<SignUpChef />} />
         <Route path="/profile"  element={<ProfilePage setLoggedIn={setLoggedIn} />} />
-    
       </Routes>
-      <Footer /> </ThemeProvider>
+      </ThemeProvider>
     </Router>
   );
 };

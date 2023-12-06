@@ -1,22 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import ExpandRecipe from './ExpandRecipe';
+import EditRecipe from './EditRecipe';
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
-export default function Recipes() {
+export default function Recipes(props) {
   const [expandedView, setExpandedView] = useState(false);
+  const [editView, setEditView] = useState(false);
+  const [data, setData] = useState([]);
+  const [isChef, setIsChef] = useState(props.isChef);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+
+  const handleBack = () => {
+    setExpandedView(false);
+    setEditView(false);
+    props.disableButtons(false);
+  }
+
+  const handleExpand = () => {
+    setExpandedView(true);
+    props.disableButtons(true);
+  }
+
+  const handleEdit = () => {
+    setEditView(true);
+    props.disableButtons(true);
+  }
+
   return (
 
     
@@ -24,9 +44,13 @@ export default function Recipes() {
         {expandedView ?
           <>
             <ExpandRecipe />
-            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={() => setExpandedView(false)}>Back</Button></center>
+            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
           </>
-          : <Grid container spacing={4}>
+          : editView? 
+           <><EditRecipe /> 
+           <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
+           </>: 
+          <Grid container spacing={4}>
             {cards.map((card) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
                 <Card
@@ -50,8 +74,8 @@ export default function Recipes() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={()=>setExpandedView(true)}>View</Button>
-                    <Button size="small">Edit</Button>
+                    <Button size="small" onClick={handleExpand}>View</Button>
+                    {isChef == true && <Button size="small" onClick={handleEdit}>Edit</Button>}
                   </CardActions>
                 </Card>
               </Grid>

@@ -45,11 +45,12 @@ export default function Header(props) {
   return (
     <AppBar position="absolute">
       <Toolbar >
-        <Typography style={{ justifySelf: 'start', marginRight: '50%' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
+        <Typography style={{ justifySelf: 'start', marginRight: '50%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
           DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
         </Typography>
+        {props.loggedIn == true && <>
         <UserIcon sx={{ mr: 2 }} />
-        <Typography variant="h6" color="inherit" noWrap>
+        <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
           Username
         </Typography>
         <IconButton
@@ -61,7 +62,7 @@ export default function Header(props) {
           aria-expanded={open ? 'true' : undefined}
         >
           <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-        </IconButton>
+        </IconButton></>}
       </Toolbar>
       <Menu
         anchorEl={anchorEl}
@@ -101,13 +102,13 @@ export default function Header(props) {
         <MenuItem onClick={handleProfile}>
           <Avatar /> Profile
         </MenuItem>
-        {props.loggedIn == true && <Divider />}
-        {props.loggedIn == true && <MenuItem onClick={handleLogOut}>
+        <Divider />
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Logout
-        </MenuItem>}
+        </MenuItem>
       </Menu>
     </AppBar>
   );
