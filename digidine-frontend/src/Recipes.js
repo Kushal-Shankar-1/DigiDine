@@ -9,8 +9,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import ExpandRecipe from './ExpandRecipe';
 import EditRecipe from './EditRecipe';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
-
+  
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
@@ -20,6 +21,24 @@ export default function Recipes(props) {
   const [data, setData] = useState([]);
   const [isChef, setIsChef] = useState(props.isChef);
   const user = JSON.parse(sessionStorage.getItem('user'));
+  const handleRemove = () => {
+    // Open the dialog box to confirm deletion
+    setConfirmDelete(true);
+  }
+
+  const handleConfirmDelete = () => {
+    // Perform the deletion logic here
+    console.log('Recipe deleted');
+    // Close the dialog box
+    setConfirmDelete(false);
+  }
+
+  const handleCancelDelete = () => {
+    // Close the dialog box
+    setConfirmDelete(false);
+  }
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleBack = () => {
     setExpandedView(false);
@@ -35,7 +54,7 @@ export default function Recipes(props) {
   const handleEdit = () => {
     setEditView(true);
     props.disableButtons(true);
-  }
+  }  
 
   return (
 
@@ -76,11 +95,24 @@ export default function Recipes(props) {
                   <CardActions>
                     <Button size="small" onClick={handleExpand}>View</Button>
                     {isChef == true && <Button size="small" onClick={handleEdit}>Edit</Button>}
+                    {isChef == true && <Button size="small" onClick={handleRemove}>Remove</Button>}
                   </CardActions>
                 </Card>
               </Grid>
             ))}
           </Grid>}
+          {confirmDelete && (
+        <Dialog open={confirmDelete} onClose={handleCancelDelete}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this recipe?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete}>Cancel</Button>
+            <Button onClick={handleConfirmDelete}>Delete</Button>
+          </DialogActions>
+        </Dialog>
+      )}
       </Container>
     
   )

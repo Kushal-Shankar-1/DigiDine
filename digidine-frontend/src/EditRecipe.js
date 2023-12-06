@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import UpdateFlavourRecipe from './UpdateFlavourRecipe';
+import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 
 const EditRecipe = () => {
     // Dummy image URL
@@ -30,7 +32,7 @@ const EditRecipe = () => {
         updatedInstructions[index] = newInstruction;
         setInstructions(updatedInstructions);
     };
-    
+
     const addInstruction = (newInstruction) => {
         setInstructions([...instructions, newInstruction]);
     }
@@ -38,6 +40,8 @@ const EditRecipe = () => {
         <Container maxWidth="md">
             <Card>
                 <img src={imageUrl} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
+                <UpdateIngredientsRecipe />
+                <UpdateFlavourRecipe />
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions

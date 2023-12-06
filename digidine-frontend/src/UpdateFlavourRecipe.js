@@ -13,16 +13,16 @@ const UpdateFlavourRecipe = () => {
     };
 
     return (
-        <Container maxWidth="md">
+        <Container style={{marginTop:'5%'}} maxWidth="md">
             <Grid container spacing={3} justifyContent="center">
                 {/* <Grid item xs={3}>
                 </Grid> */}
 
                 <Grid item xs={6}>
-                    <Typography variant="h5">Flavor Preferences</Typography>
+                    <Typography style={{background:'lightblue'}} variant="h5">Flavor</Typography>
                     <div>
-                        <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Mild') ? 'PapayaWhip' : 'white' }}
+                        <Card 
+                            style={{ backgroundColor: flavorPreferences.includes('Mild') ? 'PapayaWhip' : 'LavenderBlush' }}
                             onClick={() => handleFlavorPreferencesChange('Mild')}
                         >
                             <CardContent>
@@ -34,7 +34,7 @@ const UpdateFlavourRecipe = () => {
                             </CardContent>
                         </Card>
                         <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Spicy') ? 'PapayaWhip' : 'white' }}
+                            style={{ backgroundColor: flavorPreferences.includes('Spicy') ? 'PapayaWhip' : 'LavenderBlush' }}
                             onClick={() => handleFlavorPreferencesChange('Spicy')}
                         >
                             <CardContent>
@@ -46,7 +46,7 @@ const UpdateFlavourRecipe = () => {
                             </CardContent>
                         </Card>
                         <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Medium') ? 'PapayaWhip' : 'white' }}
+                            style={{ backgroundColor: flavorPreferences.includes('Medium') ? 'PapayaWhip' : 'LavenderBlush' }}
                             onClick={() => handleFlavorPreferencesChange('Medium')}
                         >
                             <CardContent>
