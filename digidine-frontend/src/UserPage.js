@@ -32,7 +32,8 @@ export default function UserPage(props) {
 
     const [disableButtons, setDisableButtons] = useState(false);
     useEffect(() => {
-        console.log("USER IN USER PAGE",user);
+        if(selectedOption === "explore"){
+            setExploreType("all");
 
         axios.get('http://localhost:5000/recipes/all')
             .then((response) => {
@@ -73,8 +74,9 @@ export default function UserPage(props) {
             .catch((error) => {
                 console.log(error);
             });
+        }
 
-    },[props.user])
+    },[selectedOption])
     useEffect(() => {
         if(exploreType === "all"){
             setData(allData);
