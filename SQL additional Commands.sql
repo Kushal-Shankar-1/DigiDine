@@ -1,3 +1,4 @@
+USE digidine;
 DROP PROCEDURE IF EXISTS get_recipe_information;
 DELIMITER $
 CREATE PROCEDURE get_recipe_information (IN recipe_id_p INT)

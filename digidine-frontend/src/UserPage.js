@@ -23,7 +23,7 @@ export default function UserPage(props) {
     const [allData, setAllData] = useState([]);
     const [inventoryData, setInventoryData] = useState([]);
     const [preferencesData, setPreferencesData] = useState([]);
-    const [customData, setCustomData] = useState([]);
+    const [preferenceAndInventoryData, setPreferenceAndInventoryData] = useState([]);
     const [user, setUser] = useState(props.user);
 
     const handleOption = (event) => {
@@ -48,22 +48,31 @@ export default function UserPage(props) {
 
             axios.get(`http://localhost:5000/recipes/custom/${user.user_name}`)
             .then((response) => {
-                setCustomData(response.data);
+                setPreferencesData(response.data);
                 
             })
             .catch((error) => {
                 console.log(error);
             });
 
-            // axios.get('http://localhost:5000/recipes/custom/hari')
-            // .then((response) => {
-            //     console.log("RESPONSE AXIOS 2",response);
-            //     setCustomData(response.data);
+            axios.get(`http://localhost:5000/recipes/preferred/${user.user_name}`)
+            .then((response) => {
+                console.log("RESPONSE AXIOS 2",response);
+                setPreferenceAndInventoryData(response.data);
                 
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            // });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+            axios.get(`http://localhost:5000/recipes/fridge/${user.user_name}`)
+            .then((response) => {
+                setInventoryData(response.data);
+                
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
     },[props.user])
     useEffect(() => {
@@ -77,7 +86,7 @@ export default function UserPage(props) {
             setData(preferencesData);
         }
         else if(exploreType === "custom"){
-            setData(customData);
+            setData(preferenceAndInventoryData);
         }
     },[exploreType]
     );
