@@ -12,19 +12,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -36,12 +25,20 @@ export default function SignIn(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+    axios.post('http://localhost:5000/sign-in', {
+      username: data.get('username'),
       password: data.get('password'),
-    });
-    sessionStorage.setItem('loggedIn', true);
-    props.setLoggedIn(true);
+    })
+      .then((response) => {
+        console.log(response);
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+        sessionStorage.setItem('loggedIn', true);
+        props.setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert('Invalid Credentials');
+      });
   };
 
   return (
@@ -83,10 +80,10 @@ export default function SignIn(props) {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
                 autoFocus
               />
               <TextField
@@ -114,9 +111,6 @@ export default function SignIn(props) {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  {/* <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link> */}
                 </Grid>
                 <Grid item>
                   <Link href="/signupOption" variant="body2">

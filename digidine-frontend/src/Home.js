@@ -11,8 +11,9 @@ export default function Home(props) {
     const [userType, setUserType] = useState('chef');
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
+        if (sessionStorage.getItem('user') !== null) {
             setLoggedIn(true);
+            setUserType(JSON.parse(sessionStorage.getItem('user')).restaurantName === undefined ? 'user' : 'chef');
         }
         props.setLoggedIn(loggedIn);
     }

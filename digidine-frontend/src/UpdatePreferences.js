@@ -1,25 +1,77 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Checkbox, Container, Grid } from '@mui/material';
+import axios from 'axios';
 
 const UpdatePreferences = () => {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+    const [selectedDietaryRestrictions, setSelectedDietaryRestrictions] = useState([]);
+    const [selectedFlavorPreferences, setSelectedFlavorPreferences] = useState([]);
     const [flavorPreferences, setFlavorPreferences] = useState([]);
 
+    useEffect(() => {
+        axios.get(`http://localhost:5000/get-dietary-restrictions/hari`)
+            .then((response) => {
+                console.log("DATA FETCH", response.data);
+                setDietaryRestrictions(response.data);
+
+                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.hasRestriction == true).map((restriction) => restriction.restrictionName));
+
+            })
+        axios.get(`http://localhost:5000/get-user-flavour/hari`)
+            .then((response) => {
+                console.log(response.data);
+                setFlavorPreferences(response.data);
+                setSelectedFlavorPreferences(response.data.filter((preference) => preference.hasFlavourPref == true).map((preference) => preference.flavourName));
+            })
+    }, []);
 
     const handleDietaryRestrictionsChange = (restriction) => {
-        if (dietaryRestrictions.includes(restriction)) {
-            setDietaryRestrictions(dietaryRestrictions.filter((r) => r !== restriction));
+        if (selectedDietaryRestrictions.includes(restriction)) {
+            axios.post(`http://localhost:5000/set_dietary_restrictions/hari`, {
+                restrictionName: restriction,
+                hasRestriction: false
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.status == 200)
+                        setSelectedDietaryRestrictions(selectedDietaryRestrictions.filter(r => r !== restriction));
+                })
+
         } else {
-            setDietaryRestrictions([...dietaryRestrictions, restriction]);
+            axios.post(`http://localhost:5000/set_dietary_restrictions/hari`, {
+                restrictionName: restriction,
+                hasRestriction: true
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.status == 200)
+                        setSelectedDietaryRestrictions([...selectedDietaryRestrictions, restriction]);
+                })
         }
     };
 
     const handleFlavorPreferencesChange = (preference) => {
-        if (flavorPreferences.includes(preference)) {
-            setFlavorPreferences(flavorPreferences.filter((r) => r !== preference));
-        } else {
-            setFlavorPreferences([...flavorPreferences, preference]);
-        }
+        if (selectedFlavorPreferences.includes(preference)) {
+            axios.post(`http://localhost:5000/set-user-flavour/hari`, {
+                flavourName: preference,
+                isPreferred: false
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.status == 200)
+                        setSelectedFlavorPreferences(selectedFlavorPreferences.filter(p => p !== preference));
+        })}
+         else {
+            axios.post(`http://localhost:5000/set-user-flavour/hari`, {
+                flavourName: preference,
+                isPreferred: true
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.status == 200)
+                        setSelectedFlavorPreferences([...selectedFlavorPreferences, preference]);
+        })
+    }
     };
 
     return (
@@ -28,104 +80,45 @@ const UpdatePreferences = () => {
                 <Grid item xs={6}>
                     <Typography variant="h5">Dietary Restrictions</Typography>
                     <div>
-                        <Card
-                            style={{
-                                backgroundColor: dietaryRestrictions.includes('Gluten-free') ? 'MistyRose' : 'white',
-                            }}
-                            onClick={() => handleDietaryRestrictionsChange('Gluten-free')}
-                        >
-                            <CardContent>
-                                <Typography>Gluten-free</Typography>
-                                <Checkbox
-                                    checked={dietaryRestrictions.includes('Gluten-free')}
-                                    onChange={() => handleDietaryRestrictionsChange('Gluten-free')}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card
-                            style={{
-                                backgroundColor: dietaryRestrictions.includes('Vegetarian') ? 'MistyRose' : 'white',
-                            }}
-                            onClick={() => handleDietaryRestrictionsChange('Vegetarian')}
-                        >
-                            <CardContent>
-                                <Typography>Vegetarian</Typography>
-                                <Checkbox
-                                    checked={dietaryRestrictions.includes('Vegetarian')}
-                                    onChange={() => handleDietaryRestrictionsChange('Vegetarian')}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card
-                            style={{
-                                backgroundColor: dietaryRestrictions.includes('Vegan') ? 'MistyRose' : 'white',
-                            }}
-                            onClick={() => handleDietaryRestrictionsChange('Vegan')}
-                        >
-                            <CardContent>
-                                <Typography>Vegan</Typography>
-                                <Checkbox
-                                    checked={dietaryRestrictions.includes('Vegan')}
-                                    onChange={() => handleDietaryRestrictionsChange('Vegan')}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card
-                            style={{
-                                backgroundColor: dietaryRestrictions.includes('Lactose Intolerant') ? 'MistyRose' : 'white',
-                            }}
-                            onClick={() => handleDietaryRestrictionsChange('Lactose Intolerant')}
-                        >
-                            <CardContent>
-                                <Typography>Lactose Intolerant</Typography>
-                                <Checkbox
-                                    checked={dietaryRestrictions.includes('Lactose Intolerant')}
-                                    onChange={() => handleDietaryRestrictionsChange('Lactose Intolerant')}
-                                />
-                            </CardContent>
-                        </Card>
+                        {dietaryRestrictions.map((restriction, index) => (
+
+                            <Card key={index}
+                                style={{
+                                    backgroundColor: selectedDietaryRestrictions.includes(restriction.restrictionName) ? 'MistyRose' : 'white',
+                                }}
+                            // onClick={() => handleDietaryRestrictionsChange(restriction.restrictionName)}
+                            >
+                                <CardContent>
+                                    <Typography>{restriction.restrictionName}</Typography>
+                                    <Checkbox
+                                        checked={selectedDietaryRestrictions.includes(restriction.restrictionName)}
+                                        onChange={() => handleDietaryRestrictionsChange(restriction.restrictionName)}
+                                    />
+                                </CardContent>
+                            </Card>
+                        ))}
+
                     </div>
                 </Grid>
 
                 <Grid item xs={6}>
                     <Typography variant="h5">Flavor Preferences</Typography>
                     <div>
-                        <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Mild') ? 'PapayaWhip' : 'white' }}
-                            onClick={() => handleFlavorPreferencesChange('Mild')}
+                        {flavorPreferences.map((preference, index) => (
+                            <Card
+                            style={{ backgroundColor: selectedFlavorPreferences.includes(preference.flavourName) ? 'PapayaWhip' : 'white' }}
                         >
                             <CardContent>
-                                <Typography>Mild</Typography>
+                                <Typography>{preference.flavourName}</Typography>
                                 <Checkbox
-                                    checked={flavorPreferences.includes('Mild')}
-                                    onChange={() => handleFlavorPreferencesChange('Mild')}
+                                    checked={selectedFlavorPreferences.includes(preference.flavourName)}
+                                    onChange={() => handleFlavorPreferencesChange(preference.flavourName)}
                                 />
                             </CardContent>
                         </Card>
-                        <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Spicy') ? 'PapayaWhip' : 'white' }}
-                            onClick={() => handleFlavorPreferencesChange('Spicy')}
-                        >
-                            <CardContent>
-                                <Typography>Spicy</Typography>
-                                <Checkbox
-                                    checked={flavorPreferences.includes('Spicy')}
-                                    onChange={() => handleFlavorPreferencesChange('Spicy')}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card
-                            style={{ backgroundColor: flavorPreferences.includes('Medium') ? 'PapayaWhip' : 'white' }}
-                            onClick={() => handleFlavorPreferencesChange('Medium')}
-                        >
-                            <CardContent>
-                                <Typography>Medium</Typography>
-                                <Checkbox
-                                    checked={flavorPreferences.includes('Medium')}
-                                    onChange={() => handleFlavorPreferencesChange('Medium')}
-                                />
-                            </CardContent>
-                        </Card>
+                        ))
+                            }
+                        
                     </div>
                 </Grid>
 

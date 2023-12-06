@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Container, Grid, Paper, Typography } from '@mui/material';
-
+import axios from 'axios';
 
 const UpdateInventory = () => {
 
+    useEffect(() => {
+        axios.get(`http://localhost:5000/fridge/${fridgeId}/ingredients`)
+            .then((response) => {
+                console.log(response.data);
+                // response.data.filter((ingredient) => ingredient.quantity > 0).map((ingredient) => {
+                // setCurrentIngredients(response.data);
+            }
+            )
+    }, []);
     const [currentIngredients, setCurrentIngredients] = useState(['Ingredient 1', 'Ingredient 2', 'Ingredient 3']);
     const [availableIngredients, setAvailableIngredients] = useState(['Ingredient 4', 'Ingredient 5', 'Ingredient 6']);
-
+    const [fridgeId , setFridgeId] = useState(1);
     const handleRemove = (event) => {
         setAvailableIngredients([...availableIngredients, event]);
         setCurrentIngredients(currentIngredients.filter((r) => r !== event));

@@ -76,7 +76,6 @@ INSERT INTO chef VALUES (user_name_p, first_name, last_name, password, restauran
 END**
 DELIMITER ;
 
-
 drop procedure if exists login_user;
 DELIMITER **
 CREATE PROCEDURE login_user(
@@ -105,11 +104,64 @@ BEGIN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Invalid password!';
         END IF;
     END IF;
-    if is_user then select * from user WHERE user_name = user_name_p AND password = password_p;
-    else select * from chef WHERE user_name = user_name_p AND password = password_p;
+    if is_user then SELECT u.user_name, u.fridge, u.first_name, u.last_name, u.email, f.color
+                FROM user u
+                JOIN fridge f ON u.fridge = f.fridge_id
+                WHERE u.user_name = user_name_p AND u.password = password_p;
+    else SELECT
+    c.user_name,
+    c.first_name,
+    c.last_name,
+    c.email,
+    r.name AS restaurant_name,
+    r.cuisine_type,
+    r.address,
+    a.street_no
+FROM
+    chef AS c
+JOIN
+    restaurant AS r ON c.restaurant = r.restaurant_id
+JOIN
+    address AS a ON r.address = a.address_id
+WHERE
+    c.user_name = user_name_p AND c.password = password_p;
     end if;
 END**
 DELIMITER ;
+
+-- drop procedure if exists login_user;
+-- DELIMITER **
+-- CREATE PROCEDURE login_user(
+-- 	IN user_name_p VARCHAR(64),
+--     IN password_p VARCHAR(64)
+-- )
+-- BEGIN
+--     DECLARE user_exists, password_valid BOOLEAN DEFAULT false;
+--     DECLARE is_user, is_chef BOOLEAN;
+    
+--     SELECT EXISTS(SELECT user_name FROM user WHERE user_name = user_name_p) INTO is_user;
+--     SELECT EXISTS(SELECT user_name FROM chef WHERE user_name = user_name_p) INTO is_chef;
+    
+--     SET user_exists = is_user OR is_chef;
+    
+--     IF NOT user_exists THEN 
+--         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='User does not exist!';
+--     ELSE
+--         IF is_user THEN
+--             SELECT EXISTS(SELECT user_name FROM user WHERE user_name = user_name_p AND password = password_p) INTO password_valid;
+--         ELSEIF is_chef THEN
+--             SELECT EXISTS(SELECT user_name FROM chef WHERE user_name = user_name_p AND password = password_p) INTO password_valid;
+--         END IF;
+        
+--         IF NOT password_valid THEN
+--             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Invalid password!';
+--         END IF;
+--     END IF;
+--     if is_user then select * from user WHERE user_name = user_name_p AND password = password_p;
+--     else select * from chef WHERE user_name = user_name_p AND password = password_p;
+--     end if;
+-- END**
+-- DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS get_user_dietary_restrictions;
@@ -476,5 +528,8 @@ SELECT recipe_id INTO @rid FROM recipe WHERE dish_name="Butter Chicken" AND chef
 CALL add_cooking_instruction(@rid, "Dice the chicken into medium sized pieces");
 CALL add_cooking_instruction(@rid, "Marinate the chicken with the butter chicken sauce");
 SELECT * FROM recipe_cooking_instructions;
+SELECT * FROM user;
+
+
 
 
