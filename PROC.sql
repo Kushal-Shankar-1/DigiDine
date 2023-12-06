@@ -652,6 +652,7 @@ END**
 DELIMITER ;
 
 CALL update_email_address('hari', 'hari@bc.com1');
+SELECT * FROM chef;
 
 CALL get_restriction_for_recipe(1);
 CALL get_recipe_information(1);
