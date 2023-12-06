@@ -3,7 +3,7 @@ from views import add_recipe, sign_in, register_user, register_chef, \
     set_fridge_ingredient, get_all_recipes, get_custom_recipes, update_recipe_image, update_recipe_description, \
     remove_recipe, add_cooking_instruction, edit_cooking_instruction, remove_cooking_instruction, add_recipe_flavour, \
     remove_recipe_flavour, get_recipes_by_fridge, get_preferred_recipes, update_chef_restaurant, update_email_address, \
-    get_chef_recipes
+    get_chef_recipes, get_all_recipe_information
 
 
 def initialize_routes(app):
@@ -33,3 +33,4 @@ def initialize_routes(app):
     app.add_url_rule('/update/chef-restaurant', view_func=update_chef_restaurant, methods=['POST'])
     app.add_url_rule('/update/email-address', view_func=update_email_address, methods=['POST'])
     app.add_url_rule('/recipes/chef/<user_name>', view_func=get_chef_recipes, methods=['GET'])
+    app.add_url_rule('/recipes/information', view_func=get_all_recipe_information, methods=['GET'])
