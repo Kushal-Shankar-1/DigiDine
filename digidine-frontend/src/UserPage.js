@@ -63,7 +63,21 @@ export default function UserPage() {
             //     console.log(error);
             // });
 
-    }
+    },[])
+    useEffect(() => {
+        if(exploreType === "all"){
+            setData(allData);
+        }
+        else if(exploreType === "inventory"){
+            setData(inventoryData);
+        }
+        else if(exploreType === "preferences"){
+            setData(preferencesData);
+        }
+        else if(exploreType === "custom"){
+            setData(customData);
+        }
+    },[exploreType]
     );
     return (
         <>
@@ -124,7 +138,7 @@ export default function UserPage() {
                     }
                 </Container>
             </Box>
-            {selectedOption === "explore" && <Recipes isChef={false} disableButtons={setDisableButtons} />}
+            {selectedOption === "explore" && <Recipes data={data} isChef={false} disableButtons={setDisableButtons} />}
             {selectedOption === "updateInventory" && <UpdateInventory />}
             {selectedOption === "updatePreferences" && <UpdatePreferences />}
         </>

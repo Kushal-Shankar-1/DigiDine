@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -25,6 +25,11 @@ export default function Recipes(props) {
     // Open the dialog box to confirm deletion
     setConfirmDelete(true);
   }
+  useEffect(() => {
+    setIsChef(props.isChef);
+    props.data!==undefined && setData(props.data);
+    console.log("PROPS DATA IN RECIPES",props.data);
+  }, [props.data, props.isChef]);
 
   const handleConfirmDelete = () => {
     // Perform the deletion logic here
@@ -70,7 +75,7 @@ export default function Recipes(props) {
            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
            </>: 
           <Grid container spacing={4}>
-            {cards.map((card) => (
+            {data.map((card) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -81,15 +86,17 @@ export default function Recipes(props) {
                       // 16:9
                       pt: '56.25%',
                     }}
-                    image="https://source.unsplash.com/random?wallpapers"
+                    image={card.image==null || card.image==""? "https://source.unsplash.com/random?wallpapers":card.image}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      {card.dish_name}
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
+                      {card.description}
+                    </Typography>
+                    <Typography>
+                      <i>Curated By :</i> {card.chef}
                     </Typography>
                   </CardContent>
                   <CardActions>
