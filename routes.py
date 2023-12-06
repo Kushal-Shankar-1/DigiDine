@@ -33,4 +33,4 @@ def initialize_routes(app):
     app.add_url_rule('/update/chef-restaurant', view_func=update_chef_restaurant, methods=['POST'])
     app.add_url_rule('/update/email-address', view_func=update_email_address, methods=['POST'])
     app.add_url_rule('/recipes/chef/<user_name>', view_func=get_chef_recipes, methods=['GET'])
-    app.add_url_rule('/recipes/information', view_func=get_all_recipe_information, methods=['GET'])
+    app.add_url_rule('/recipes/information/<int:recipe_id>', view_func=get_all_recipe_information, methods=['GET'])

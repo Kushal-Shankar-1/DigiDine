@@ -351,33 +351,24 @@ def get_chef_recipes(user_name):
         return jsonify({"error": "Database connection failed"}), 500
 
 
-def get_all_recipe_information():
+def get_all_recipe_information(recipe_id):
     connection = create_db_connection()
     if connection:
         try:
             cursor = connection.cursor(dictionary=True)
-            # Fetch all recipes
-            cursor.callproc('get_all_recipes', [])
-            recipes = next(cursor.stored_results()).fetchall()
+            # Fetch detailed information for a specific recipe
+            cursor.callproc('get_recipe_information', [recipe_id])
+            detailed_info = next(cursor.stored_results()).fetchall()
 
-            # For each recipe, fetch detailed information and dietary restrictions
-            for recipe in recipes:
-                recipe_id = recipe['recipe_id']
+            # Fetch dietary restrictions for the specific recipe
+            cursor.callproc('get_restriction_for_recipe', [recipe_id])
+            restrictions = next(cursor.stored_results()).fetchall()
 
-                # Fetch detailed information
-                cursor.callproc('get_recipe_information', [recipe_id])
-                detailed_info = next(cursor.stored_results()).fetchall()
+            # Prepare the final response
+            recipe_data = detailed_info[0] if detailed_info else {}
+            recipe_data['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
 
-                # Fetch dietary restrictions for the recipe
-                cursor.callproc('get_restriction_for_recipe', [recipe_id])
-                restrictions = next(cursor.stored_results()).fetchall()
-
-                # Add detailed information and restrictions to the recipe dictionary
-                if detailed_info:
-                    recipe.update(detailed_info[0])
-                recipe['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
-
-            return jsonify(recipes), 200
+            return jsonify(recipe_data), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         finally:
