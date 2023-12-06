@@ -152,12 +152,22 @@ def set_fridge_ingredient(fridge_id):
     data = request.json
     ingredient = data['ingredient']
     is_present = data['is_present']
-    connection = create_db_connection()
-    if connection:
-        execute_stored_procedure('set_fridge_ingredient', [fridge_id, ingredient, is_present])
+    try:
+        connection = create_db_connection()
+        if connection is None:
+            raise Exception("Failed to connect to the database")
+
+        cursor = connection.cursor()
+        cursor.callproc('set_fridge_ingredient', [fridge_id, ingredient, is_present])
+        cursor.close()
+        connection.commit()
         return jsonify({"message": "Fridge ingredient updated successfully"}), 200
-    else:
-        return jsonify({"error": "Database connection failed"}), 500
+    except Exception as e:
+        print (e)
+        return jsonify({"error": str(e)}), 500
+    finally:
+        connection.close()
+        
 
 
 def get_all_recipes():

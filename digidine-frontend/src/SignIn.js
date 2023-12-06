@@ -31,7 +31,7 @@ export default function SignIn(props) {
     })
       .then((response) => {
         console.log(response);
-        sessionStorage.setItem('user', JSON.stringify(response.data));
+        sessionStorage.setItem('user', JSON.stringify(response.data.user_info));
         sessionStorage.setItem('loggedIn', true);
         props.setLoggedIn(true);
       })

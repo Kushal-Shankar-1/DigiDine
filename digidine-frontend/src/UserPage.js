@@ -15,7 +15,7 @@ import UpdateInventory from './UpdateInventory';
 import axios from 'axios';
 
 
-export default function UserPage() {
+export default function UserPage(props) {
 
     const [selectedOption, setSelectedOption] = useState('explore');
     const [exploreType, setExploreType] = useState('all');
@@ -24,6 +24,7 @@ export default function UserPage() {
     const [inventoryData, setInventoryData] = useState([]);
     const [preferencesData, setPreferencesData] = useState([]);
     const [customData, setCustomData] = useState([]);
+    const [user, setUser] = useState(props.user);
 
     const handleOption = (event) => {
         setExploreType(event.target.value);
@@ -31,10 +32,12 @@ export default function UserPage() {
 
     const [disableButtons, setDisableButtons] = useState(false);
     useEffect(() => {
+        console.log("USER IN USER PAGE",user);
+
         axios.get('http://localhost:5000/recipes/all')
             .then((response) => {
-                console.log("RESPONSE AXIOS 1",response);
                 setAllData(response.data);
+                setData(response.data);
                 // sessionStorage.setItem('user', JSON.stringify(response.data));
                 // sessionStorage.setItem('loggedIn', true);
             })
@@ -43,9 +46,8 @@ export default function UserPage() {
                 // alert('Invalid Credentials');
             });
 
-            axios.get('http://localhost:5000/recipes/custom/hari')
+            axios.get(`http://localhost:5000/recipes/custom/${user.user_name}`)
             .then((response) => {
-                console.log("RESPONSE AXIOS 2",response);
                 setCustomData(response.data);
                 
             })
@@ -63,7 +65,7 @@ export default function UserPage() {
             //     console.log(error);
             // });
 
-    },[])
+    },[props.user])
     useEffect(() => {
         if(exploreType === "all"){
             setData(allData);

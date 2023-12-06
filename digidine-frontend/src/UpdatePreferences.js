@@ -11,17 +11,15 @@ const UpdatePreferences = () => {
     useEffect(() => {
         axios.get(`http://localhost:5000/get-dietary-restrictions/hari`)
             .then((response) => {
-                console.log("DATA FETCH", response.data);
                 setDietaryRestrictions(response.data);
 
-                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.hasRestriction == true).map((restriction) => restriction.restrictionName));
+                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.hasRestriction == true).map((restriction) => restriction.restrict_name));
 
             })
         axios.get(`http://localhost:5000/get-user-flavour/hari`)
             .then((response) => {
-                console.log(response.data);
                 setFlavorPreferences(response.data);
-                setSelectedFlavorPreferences(response.data.filter((preference) => preference.hasFlavourPref == true).map((preference) => preference.flavourName));
+                setSelectedFlavorPreferences(response.data.filter((preference) => preference.hasFlavourPref == true).map((preference) => preference.flavour_name));
             })
     }, []);
 
@@ -32,7 +30,6 @@ const UpdatePreferences = () => {
                 hasRestriction: false
             })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.status == 200)
                         setSelectedDietaryRestrictions(selectedDietaryRestrictions.filter(r => r !== restriction));
                 })
@@ -43,7 +40,6 @@ const UpdatePreferences = () => {
                 hasRestriction: true
             })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.status == 200)
                         setSelectedDietaryRestrictions([...selectedDietaryRestrictions, restriction]);
                 })
@@ -57,7 +53,6 @@ const UpdatePreferences = () => {
                 isPreferred: false
             })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.status == 200)
                         setSelectedFlavorPreferences(selectedFlavorPreferences.filter(p => p !== preference));
         })}
@@ -84,15 +79,15 @@ const UpdatePreferences = () => {
 
                             <Card key={index}
                                 style={{
-                                    backgroundColor: selectedDietaryRestrictions.includes(restriction.restrictionName) ? 'MistyRose' : 'white',
+                                    backgroundColor: selectedDietaryRestrictions.includes(restriction.restrict_name) ? 'MistyRose' : 'white',
                                 }}
                             // onClick={() => handleDietaryRestrictionsChange(restriction.restrictionName)}
                             >
                                 <CardContent>
-                                    <Typography>{restriction.restrictionName}</Typography>
+                                    <Typography>{restriction.restrict_name}</Typography>
                                     <Checkbox
-                                        checked={selectedDietaryRestrictions.includes(restriction.restrictionName)}
-                                        onChange={() => handleDietaryRestrictionsChange(restriction.restrictionName)}
+                                        checked={selectedDietaryRestrictions.includes(restriction.restrict_name)}
+                                        onChange={() => handleDietaryRestrictionsChange(restriction.restrict_name)}
                                     />
                                 </CardContent>
                             </Card>
@@ -106,13 +101,13 @@ const UpdatePreferences = () => {
                     <div>
                         {flavorPreferences.map((preference, index) => (
                             <Card
-                            style={{ backgroundColor: selectedFlavorPreferences.includes(preference.flavourName) ? 'PapayaWhip' : 'white' }}
+                            style={{ backgroundColor: selectedFlavorPreferences.includes(preference.flavour_name) ? 'PapayaWhip' : 'white' }}
                         >
                             <CardContent>
-                                <Typography>{preference.flavourName}</Typography>
+                                <Typography>{preference.flavour_name}</Typography>
                                 <Checkbox
-                                    checked={selectedFlavorPreferences.includes(preference.flavourName)}
-                                    onChange={() => handleFlavorPreferencesChange(preference.flavourName)}
+                                    checked={selectedFlavorPreferences.includes(preference.flavour_name)}
+                                    onChange={() => handleFlavorPreferencesChange(preference.flavour_name)}
                                 />
                             </CardContent>
                         </Card>

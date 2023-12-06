@@ -76,8 +76,8 @@ CREATE TABLE ingredient
 
 CREATE TABLE fridge_contains_ingredients
 (
-    ingredient_name VARCHAR(64) NOT NULL,
     fridge          INT         NOT NULL,
+    ingredient_name VARCHAR(64) NOT NULL,
     CONSTRAINT ingredient_in_fridge FOREIGN KEY (ingredient_name)
         REFERENCES ingredient (ingredient_name)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -204,6 +204,8 @@ CREATE TABLE recipe_cooking_instructions
         ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT instruction_key PRIMARY KEY (recipe, step_number)
 );
+
+SELECT * FROM fridge_contains_ingredients;
     
 
 

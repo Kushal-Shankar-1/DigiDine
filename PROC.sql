@@ -1,3 +1,4 @@
+USE digidine;
 DROP PROCEDURE IF EXISTS register_user;
 DELIMITER **
 CREATE PROCEDURE register_user(
@@ -417,6 +418,7 @@ BEGIN
 END $
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 DELIMITER $
 CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT, IN step_number_p INT)
 BEGIN
@@ -582,10 +584,7 @@ INSERT INTO ingredient
 VALUES ("onion", 150, 15, 45, 40);
 INSERT INTO ingredient
 VALUES ("tomato", 150, 15, 40, 45);
-INSERT INTO fridge_contains_ingredients
-VALUES ("potato", 0);
-INSERT INTO fridge_contains_ingredients
-VALUES ("onion", 0);
+
 
 call get_fridge_ingredient(0);
 
@@ -593,7 +592,8 @@ call set_user_flavour("hrishi", "sweet", false);
 select *
 from user_has_flavour_pref;
 
-call set_fridge_ingredient(0, "potato", 0);
+call set_fridge_ingredient(0, "potato", 1);
+call set_fridge_ingredient(0, "onion", 1);
 call get_fridge_ingredient(0);
 
 -- INSERT INTO difficulty VALUES(1,"easy");
@@ -614,9 +614,6 @@ VALUES (1, 'onion');
 CALL get_custom_recipes('hrishi');
 CALL get_custom_recipes('hari');
 
-
-INSERT INTO fridge_contains_ingredients
-VALUES ('onion', 1);
 CALL preferred_recipes_with_fridge_ingredients('hari');
 CALL preferred_recipes_with_fridge_ingredients('hrishi');
 
