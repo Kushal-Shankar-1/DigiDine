@@ -346,20 +346,45 @@ def get_all_recipe_information(recipe_id):
     if connection:
         try:
             cursor = connection.cursor(dictionary=True)
+
             # Fetch detailed information for a specific recipe
+            print(f"Fetching recipe information for recipe ID: {recipe_id}")
             cursor.callproc('get_recipe_information', [recipe_id])
             detailed_info = next(cursor.stored_results()).fetchall()
+            print(f"Recipe Info: {detailed_info}")
 
-            # Fetch dietary restrictions for the specific recipe
+            # Check if recipe information is available
+            if not detailed_info:
+                print("No detailed info found for the recipe")
+                return jsonify({"error": "Recipe not found"}), 404
+
+            # Aggregate recipe data
+            recipe_data = detailed_info[0]
+
+            # Fetch dietary restrictions
             cursor.callproc('get_restriction_for_recipe', [recipe_id])
             restrictions = next(cursor.stored_results()).fetchall()
-
-            # Prepare the final response
-            recipe_data = detailed_info[0] if detailed_info else {}
+            print(f"Restrictions: {restrictions}")
             recipe_data['dietary_restrictions'] = [res['restrict_name'] for res in restrictions]
+
+            # Fetch flavours
+            cursor.callproc('get_flavour_for_recipe', [recipe_id])
+            flavours = next(cursor.stored_results()).fetchall()
+            recipe_data['flavours'] = [flavour['flavour'] for flavour in flavours]
+
+            # Fetch ingredients
+            cursor.callproc('get_ingredients_for_recipe', [recipe_id])
+            ingredients = next(cursor.stored_results()).fetchall()
+            recipe_data['ingredients'] = [ingredient['ingredient'] for ingredient in ingredients]
+
+            # Fetch cooking instructions
+            cursor.callproc('get_recipe_instructions', [recipe_id])
+            instructions = next(cursor.stored_results()).fetchall()
+            recipe_data['cooking_instructions'] = instructions
 
             return jsonify(recipe_data), 200
         except Exception as e:
+            print(f"Exception: {e}")
             return jsonify({"error": str(e)}), 500
         finally:
             cursor.close()
