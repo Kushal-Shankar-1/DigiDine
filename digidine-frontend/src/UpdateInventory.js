@@ -3,6 +3,9 @@ import { Card, CardContent, Container, Grid, Paper, Typography } from '@mui/mate
 import axios from 'axios';
 
 const UpdateInventory = () => {
+    const [currentIngredients, setCurrentIngredients] = useState([]);
+    const [availableIngredients, setAvailableIngredients] = useState([]);
+    const [fridgeId, setFridgeId] = useState(1);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/fridge/${fridgeId}/ingredients`)
@@ -13,9 +16,6 @@ const UpdateInventory = () => {
             }
             )
     }, []);
-    const [currentIngredients, setCurrentIngredients] = useState([]);
-    const [availableIngredients, setAvailableIngredients] = useState([]);
-    const [fridgeId, setFridgeId] = useState(1);
     
     const handleRemove = (ingredient) => {
         axios.post(`http://localhost:5000/fridge/${fridgeId}/ingredient`, { ingredient: ingredient, is_present: false })
