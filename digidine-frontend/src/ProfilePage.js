@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, TextField, Button, Typography, Card, CardContent, MenuItem, Select } from '@mui/material';
+import axios from 'axios';
 
 export default function ProfilePage() {
     const [firstName, setFirstName] = useState('John');
@@ -7,8 +8,9 @@ export default function ProfilePage() {
     const [email, setEmail] = useState('johndoe@example.com');
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingRestaurant, setIsEditingRestaurant] = useState(false);
-    const [restaurant, setRestaurant] = useState('Restaurant 1');
+    const [restaurant, setRestaurant] = useState([]);
     const [isChef, setIsChef] = useState(false);
+    const [user, setUser] = setUser(sessionStorage.getItem('user'));
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -16,7 +18,14 @@ export default function ProfilePage() {
 
     const handleSubmit = () => {
         // Perform submit logic here
-        setIsEditing(false);
+        axios.post('http://localhost:5000//update/email-address', { user_name:user, new_email:email })
+             .then((response) => {
+                 if(response.status == 200)
+                    setIsEditing(false);
+             })
+             .catch(error =>{ console.error('Error updating email: ', error);
+              alert("Invalid email!");
+            });
     };
 
     const handleEditRestaurant = () => {
@@ -29,8 +38,12 @@ export default function ProfilePage() {
     }
 
     useEffect(() => {
-        console.log("HI HERE");   // Perform fetch logic here
-    });
+        axios.get('http://localhost:5000/recipes')
+             .then(response => {
+                setRestaurant(response.data);
+             })
+             .catch(error => console.error('Error fetching data: ', error));
+    }, []);
 
 
     return (

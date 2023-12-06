@@ -416,6 +416,7 @@ BEGIN
       AND step_number = step_number_p;
 END $
 DELIMITER ;
+DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 
 DELIMITER $
 CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT, IN step_number_p INT)
