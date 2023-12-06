@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Header(props) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(JSON.parse(sessionStorage.getItem('user')));
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,10 +44,10 @@ export default function Header(props) {
     handleClose();
   };
 
-React.useEffect (() => {
-  setUser(sessionStorage.getItem('user'));
-  console.log("USER", sessionStorage.getItem('user'));
-}, []);
+// React.useEffect (() => {
+//   setUser(sessionStorage.getItem('user'));
+//   console.log("USER", sessionStorage.getItem('user'));
+// }, []);
   return (
     <AppBar position="absolute">
       <Toolbar >
@@ -57,7 +57,7 @@ React.useEffect (() => {
         {props.loggedIn == true && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
-          Username
+        {user.user_name}
         </Typography>
         <IconButton
           onClick={handleClick}
@@ -67,7 +67,7 @@ React.useEffect (() => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+          <Avatar sx={{ width: 32, height: 32 }}>{user.user_name[0]}</Avatar>
         </IconButton></>}
       </Toolbar>
       <Menu

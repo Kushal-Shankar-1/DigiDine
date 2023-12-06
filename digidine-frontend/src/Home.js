@@ -13,7 +13,7 @@ export default function Home(props) {
 
     useEffect(() => {
         if (sessionStorage.getItem('user') !== null) {
-            setUserType(JSON.parse(sessionStorage.getItem('user')).restaurantName === undefined ? 'user' : 'chef');
+            setUserType(JSON.parse(sessionStorage.getItem('user')).restaurant_name === undefined ? 'user' : 'chef');
         }
         props.setLoggedIn(loggedIn);
     }

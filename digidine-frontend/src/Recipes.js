@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import ExpandRecipe from './ExpandRecipe';
 import EditRecipe from './EditRecipe';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import axios from 'axios';
 
   
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -33,9 +34,21 @@ export default function Recipes(props) {
 
   const handleConfirmDelete = () => {
     // Perform the deletion logic here
+    axios.post(`http://localhost:5000/chef/remove-recipe` , {})
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    .finally(() => {
+      // Close the dialog box
+      setConfirmDelete(false);
+    })
+    
     console.log('Recipe deleted');
-    // Close the dialog box
-    setConfirmDelete(false);
+    
+
   }
 
   const handleCancelDelete = () => {
@@ -101,8 +114,8 @@ export default function Recipes(props) {
                   </CardContent>
                   <CardActions>
                     <Button size="small" onClick={handleExpand}>View</Button>
-                    {isChef == true && <Button size="small" onClick={handleEdit}>Edit</Button>}
-                    {isChef == true && <Button size="small" onClick={handleRemove}>Remove</Button>}
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleEdit}>Edit</Button>}
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleRemove}>Remove</Button>}
                   </CardActions>
                 </Card>
               </Grid>

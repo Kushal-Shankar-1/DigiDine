@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -7,6 +7,7 @@ import Container from '@mui/material/Container';
 import { FormControlLabel, Radio, FormLabel, FormControl, RadioGroup } from '@mui/material';
 import Recipes from './Recipes';
 import AddRecipe from './AddRecipe';
+import axios from 'axios';
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -16,10 +17,47 @@ export default function ChefPage() {
   const [selectedOption, setSelectedOption] = useState('explore');
     const [exploreType, setExploreType] = useState('all');
     const [disableButtons, setDisableButtons] = useState(false);
+    const [data, setData] = useState([]);
+    const [allData, setAllData] = useState([]);
+    const [chefData, setChefData] = useState([]);
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
     const handleOption = (event) => {
       setExploreType(event.target.value);
+      if(event.target.value === "all"){
+        setData(allData);
+      }else{
+        setData(chefData);
+      }
   }
+  useEffect(() => {
+    if(selectedOption === "explore"){
+        setExploreType("all");
+
+    axios.get('http://localhost:5000/recipes/all')
+        .then((response) => {
+            setAllData(response.data);
+            setData(response.data);
+            // sessionStorage.setItem('user', JSON.stringify(response.data));
+            // sessionStorage.setItem('loggedIn', true);
+        })
+        .catch((error) => {
+            console.log(error);
+            // alert('Invalid Credentials');
+        });
+
+        axios.get(`http://localhost:5000/recipes/chef/${user.user_name}`)
+        .then((response) => {
+            setChefData(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
+        
+    }
+},[selectedOption])
+
   return (
     
       <main>
@@ -68,14 +106,14 @@ export default function ChefPage() {
                                     name="row-radio-buttons-group"
                                 >
                                     <FormControlLabel value="all" control={<Radio />} label="All" checked={exploreType === "all"} onClick={handleOption} />
-                                    <FormControlLabel value="inventory" control={<Radio />} label="Yours" checked={exploreType === "inventory"} onClick={handleOption} />
+                                    <FormControlLabel value="yours" control={<Radio />} label="Yours" checked={exploreType === "yours"} onClick={handleOption} />
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
                     }
           </Container>
         </Box>
-        {selectedOption=="explore" && <Recipes isChef={true} disableButtons={setDisableButtons} />}
+        {selectedOption=="explore" && <Recipes isChef={true} chefName={user.user_name} data={data} disableButtons={setDisableButtons} />}
         {selectedOption=="addNewRecipe" && <AddRecipe />}
       </main>
   )

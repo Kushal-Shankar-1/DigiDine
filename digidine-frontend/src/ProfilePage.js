@@ -3,14 +3,14 @@ import { Container, TextField, Button, Typography, Card, CardContent, MenuItem, 
 import axios from 'axios';
 
 export default function ProfilePage() {
-    const [firstName, setFirstName] = useState('John');
-    const [lastName, setLastName] = useState('Doe');
-    const [email, setEmail] = useState('johndoe@example.com');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingRestaurant, setIsEditingRestaurant] = useState(false);
     const [restaurant, setRestaurant] = useState([]);
     const [isChef, setIsChef] = useState(false);
-    const [user, setUser] = setUser(sessionStorage.getItem('user'));
+    const [user, setUser] = useState(sessionStorage.getItem('user'));
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
     const handleSubmit = () => {
         // Perform submit logic here
-        axios.post('http://localhost:5000//update/email-address', { user_name:user, new_email:email })
+        axios.post('http://localhost:5000/update/email-address', { user_name:user.user_name, new_email:email })
              .then((response) => {
                  if(response.status == 200)
                     setIsEditing(false);
@@ -38,11 +38,16 @@ export default function ProfilePage() {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:5000/recipes')
-             .then(response => {
-                setRestaurant(response.data);
-             })
-             .catch(error => console.error('Error fetching data: ', error));
+        // axios.get('http://localhost:5000/recipes')
+        //      .then(response => {
+        //         setRestaurant(response.data);
+        //      })
+        //      .catch(error => console.error('Error fetching data: ', error));
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        setUser(user);
+        setFirstName(user.first_name);
+        setLastName(user.last_name);
+        setEmail(user.email);
     }, []);
 
 
