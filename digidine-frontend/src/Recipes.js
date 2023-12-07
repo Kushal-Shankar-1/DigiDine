@@ -105,7 +105,7 @@ export default function Recipes(props) {
                       // 16:9
                       pt: '56.25%',
                     }}
-                    image={card.image==null || card.image==""? "https://source.unsplash.com/random?wallpapers":card.image}
+                    image={card.image==null || card.image==""? "https://source.unsplash.com/random?wallpapers": card.image}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
