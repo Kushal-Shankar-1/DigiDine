@@ -421,9 +421,13 @@ DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 
 DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 DELIMITER $
-CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT, IN step_number_p INT)
+CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT)
 BEGIN
-    DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step_number_p;
+	DECLARE step_count INT;
+    SELECT COUNT(*) INTO step FROM recipe_cooking_instructions WHERE recipe = recipe_id_p;
+    IF step_count > 0 THEN
+		DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step;
+	END IF;
 END $
 DELIMITER ;
 
@@ -431,7 +435,11 @@ DROP PROCEDURE IF EXISTS add_recipe_flavour;
 DELIMITER $
 CREATE PROCEDURE add_recipe_flavour(IN recipe_p INT, IN flavour_p VARCHAR(64))
 BEGIN
-    INSERT INTO recipe_has_flavour VALUES (recipe_p, flavour_p);
+	DECLARE req BOOLEAN;
+    SELECT NOT EXISTS(SELECT * FROM recipe_has_flavour WHERE recipe=recipe_p AND flavour=flavour_p) INTO req;
+    IF req THEN
+		INSERT INTO recipe_has_flavour VALUES (recipe_p, flavour_p);
+	END IF;
 END $
 DELIMITER ;
 
@@ -439,7 +447,11 @@ DROP PROCEDURE IF EXISTS remove_recipe_flavour;
 DELIMITER $
 CREATE PROCEDURE remove_recipe_flavour(IN recipe_p INT, IN flavour_p VARCHAR(64))
 BEGIN
-    DELETE FROM recipe_has_flavour WHERE recipe = recipe_p AND flavour = flavour_p;
+	DECLARE req BOOLEAN;
+    SELECT EXISTS(SELECT * FROM recipe_has_flavour WHERE recipe=recipe_p AND flavour=flavour_p) INTO req;
+    IF req THEN
+		DELETE FROM recipe_has_flavour WHERE recipe = recipe_p AND flavour = flavour_p;
+	END IF;
 END $
 DELIMITER ;
 
@@ -585,6 +597,8 @@ INSERT INTO ingredient
 VALUES ("onion", 150, 15, 45, 40);
 INSERT INTO ingredient
 VALUES ("tomato", 150, 15, 40, 45);
+
+SELECT * FROM recipe_cooking_instructions;
 
 
 call get_fridge_ingredient(0);

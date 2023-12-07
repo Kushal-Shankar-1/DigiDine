@@ -11,41 +11,56 @@ const EditRecipe = (props) => {
     const imageUrl = 'https://dummyimage.com/200x100/000/fff';
 
     // State variable to store the instructions
-    const [instructions, setInstructions] = useState([
-        'Preheat the oven to 350°F',
-        'Mix the dry ingredients in a bowl',
-        'Add the wet ingredients and stir well',
-        'Pour the batter into a greased baking pan',
-        'Bake for 30 minutes or until golden brown',
-        'Let it cool before serving'
-    ]);
+    const [instructions, setInstructions] = useState([]);
 
     const [recipe, setRecipe] = useState(null);
     useEffect(() => {
         axios.get(`http://localhost:5000/recipes/information/${props.selectedRecipe}`)
             .then(response => {
                 setRecipe(response.data);
-                console.log("IN EDIT FETCH DONE",response.data);
+                setInstructions(response.data.cooking_instructions);
             })
             .catch(error => console.error('Error fetching data: ', error));
     }
         , []);
     // Function to remove an instruction from the instructions array
-    const removeInstruction = (index) => {
-        const updatedInstructions = [...instructions];
-        updatedInstructions.splice(index, 1);
-        setInstructions(updatedInstructions);
+    const removeInstruction = () => {
+        axios.post(`http://localhost:5000/recipe/remove-instruction`, { recipe_id: recipe.recipe_id })
+            .then((response) => {
+                console.log(response);
+                const updatedInstructions = [...instructions];
+                updatedInstructions.splice(-1, 1);
+                setInstructions(updatedInstructions);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     };
 
     // Function to edit an instruction in the instructions array
     const editInstruction = (index, newInstruction) => {
-        const updatedInstructions = [...instructions];
-        updatedInstructions[index] = newInstruction;
-        setInstructions(updatedInstructions);
+        axios.post(`http://localhost:5000/recipe/edit-instruction`, { step_number: index, instruction: newInstruction, recipe_id: recipe.recipe_id })
+            .then((response) => {
+                const updatedInstructions = [...instructions];
+                updatedInstructions[index].step_description = newInstruction;
+                setInstructions(updatedInstructions);
+                console.log("NEW INSTRUCTION", newInstruction);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     const addInstruction = (newInstruction) => {
-        setInstructions([...instructions, newInstruction]);
+        axios.post(`http://localhost:5000/recipe/add-instruction`, { instruction: newInstruction, recipe_id: recipe.recipe_id })
+            .then((response) => {
+                console.log(response);
+
+                setInstructions([...instructions, {step_description:newInstruction}]);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     if (recipe == null)
@@ -64,7 +79,7 @@ const EditRecipe = (props) => {
                     <List>
                         {instructions.map((instruction, index) => (
                             <ListItem key={index}>
-                                <ListItemText primary={`Step ${index + 1}: ${instruction}`} />
+                                <ListItemText primary={`Step ${index + 1}: ${instruction.step_description}`} />
                                 <IconButton onClick={() => removeInstruction(index)}>
                                     <CloseIcon />
                                 </IconButton>

@@ -263,12 +263,10 @@ def edit_cooking_instruction():
 
 
 # Remove Cooking Instruction
-@login_required
 def remove_cooking_instruction():
     data = request.json
     recipe_id = data['recipe_id']
-    step_number = data['step_number']
-    execute_stored_procedure('remove_cooking_instruction', [recipe_id, step_number])
+    execute_stored_procedure('remove_cooking_instruction', [recipe_id])
     return jsonify({"message": "Cooking instruction removed successfully"}), 200
 
 
