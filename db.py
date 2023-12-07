@@ -56,9 +56,10 @@ def execute_read_query(query):
 
 
 def execute_stored_procedure(proc_name, params):
+    print("Executing stored procedure: " + proc_name)
     connection = create_db_connection()
     if connection is not None:
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
         try:
             cursor.callproc(proc_name, params)
             connection.commit()

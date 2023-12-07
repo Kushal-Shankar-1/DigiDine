@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
+import axios from 'axios';
 
-const AddRecipe = () => {
+const AddRecipe = (props) => {
     // Dummy image URL
     const imageUrl = 'https://dummyimage.com/200x100/000/fff';
 
     // State variable to store the instructions
     const [instructions, setInstructions] = useState([]);
     const [image, setImage] = useState('');
+    const [recipe, setRecipe] = useState(null);
+    const [data, setData] = useState(null);
 
     // Function to remove an instruction from the instructions array
-    const removeInstruction = (index) => {
+    const removeInstruction = () => {
         const updatedInstructions = [...instructions];
-        updatedInstructions.splice(index, 1);
+        updatedInstructions.splice(-1, 1);
         setInstructions(updatedInstructions);
     };
 
@@ -26,21 +29,44 @@ const AddRecipe = () => {
         updatedInstructions[index] = newInstruction;
         setInstructions(updatedInstructions);
     };
-    
+
     const addInstruction = (newInstruction) => {
         setInstructions([...instructions, newInstruction]);
     }
 
     const handleConfirmTitle = () => {
-        if(title !== "") {
-        setConfirmedTitle(title);
-        setDisableTitle(true);
-        }
-        else{
+        if (title !== "") {
+            axios.post(`http://localhost:5000/chef/add-recipe`, {chef_name: props.chefName, dish_name: title})
+                .then((response) => {
+                    setConfirmedTitle(title);
+                    setDisableTitle(true);
+                    setRecipe(response.data.recipe_id);
+                    console.log("Added recipe succefully")
+                }
+                )
+                .catch((error) => {
+                    console.log(error);
+                }
+                )
+                .finally(() => {
+                    // Close the dialog box
+                    // setConfirmDelete(false);
+                }
+                )}
+        else {
             alert("Please enter a title");
         }
     }
-
+    useEffect(() => {
+        if(recipe!==null){
+        axios.get(`http://localhost:5000/recipes/information/${recipe}`)
+            .then(response => {
+                setData(response.data);
+            })
+            .catch(error => console.error('Error fetching data: ', error));
+    }
+}
+        , [recipe]);
     const [title, setTitle] = useState('');
     const [disableTitle, setDisableTitle] = useState(false);
     const [confirmedTitle, setConfirmedTitle] = useState('');
@@ -52,31 +78,31 @@ const AddRecipe = () => {
                     <Typography variant="h6" component="div" gutterBottom>
                         Recipe Title
                     </Typography>
-                    <TextField disabled={disableTitle} style={{marginRight:'5%'}} value={title} onChange={(e) => setTitle(e.target.value)} />
-                    {!disableTitle? <Button variant="contained" onClick={handleConfirmTitle}>
+                    <TextField disabled={disableTitle} style={{ marginRight: '5%' }} value={title} onChange={(e) => setTitle(e.target.value)} />
+                    {!disableTitle ? <Button variant="contained" onClick={handleConfirmTitle}>
                         Confirm Title
                     </Button>
-                    : <Button variant="outlined" onClick={() => setDisableTitle(false)}>
-                        Edit Title
-                    </Button>}
+                        : <Button variant="outlined" onClick={() => setDisableTitle(false)}>
+                            Edit Title
+                        </Button>}
                 </CardContent>
             </Card>
-            {confirmedTitle !== "" && <><Card>
+            {confirmedTitle !== "" && data!==null && <><Card>
                 <CardContent>
                     <ListItem>
-                                <ListItemText primary={`Image URL: ${image}`} />
-                                <IconButton onClick={() => {
-                                    const newInstruction = prompt('Enter the new instruction:');
-                                    if (newInstruction) {
-                                        setImage(newInstruction);
-                                    }
-                                }}>
-                                    <EditIcon />
-                                </IconButton>
-                            </ListItem>
+                        <ListItemText primary={`Image URL: ${image}`} />
+                        <IconButton onClick={() => {
+                            const newInstruction = prompt('Enter the new instruction:');
+                            if (newInstruction) {
+                                setImage(newInstruction);
+                            }
+                        }}>
+                            <EditIcon />
+                        </IconButton>
+                    </ListItem>
                 </CardContent>
-                <UpdateIngredientsRecipe />
-                <UpdateFlavourRecipe />
+                <UpdateIngredientsRecipe recipe={recipe} data={data.ingredients} />
+                <UpdateFlavourRecipe recipe={recipe} data={data.ingredients} />
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions
@@ -111,7 +137,7 @@ const AddRecipe = () => {
                 </CardContent>
             </Card>
             </>}
-            
+
         </Container>
     );
 };
