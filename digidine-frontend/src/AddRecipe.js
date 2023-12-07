@@ -6,6 +6,7 @@ import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import UpdateInstruction from './UpdateInstruction';
 
 const AddRecipe = (props) => {
     // Dummy image URL
@@ -106,38 +107,7 @@ const AddRecipe = (props) => {
                 </CardContent>
                 <UpdateIngredientsRecipe recipe={recipe} data={data.ingredients} />
                 <UpdateFlavourRecipe recipe={recipe} data={data.flavours} />
-                <CardContent>
-                    <Typography variant="h5" component="div" gutterBottom>
-                        Cooking Instructions
-                    </Typography>
-                    <List>
-                        {instructions.map((instruction, index) => (
-                            <ListItem key={index}>
-                                <ListItemText primary={`Step ${index + 1}: ${instruction}`} />
-                                <IconButton onClick={() => removeInstruction(index)}>
-                                    <CloseIcon />
-                                </IconButton>
-                                <IconButton onClick={() => {
-                                    const newInstruction = prompt('Enter the new instruction:');
-                                    if (newInstruction) {
-                                        editInstruction(index, newInstruction);
-                                    }
-                                }}>
-                                    <EditIcon />
-                                </IconButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                    <center><Button variant="contained" onClick={() => {
-                        const newInstruction = prompt('Enter the new instruction:');
-                        if (newInstruction) {
-                            addInstruction(newInstruction);
-                        }
-                    }
-                    }>
-                        Add New Instruction
-                    </Button></center>
-                </CardContent>
+                <UpdateInstruction recipe={recipe} data={data.cooking_instructions} />
             </Card>
             </>}
             <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
