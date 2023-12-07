@@ -58,6 +58,7 @@ export default function ProfilePage() {
     return (
         <>
             <Container style={{ margin: "10%" }} maxWidth="md">
+            <Typography variant='h4'>Profile Information</Typography>
                 <Card style={{ marginTop: '5%' }}>
                     <CardContent>
                         <Typography><i>First Name:</i> </Typography>

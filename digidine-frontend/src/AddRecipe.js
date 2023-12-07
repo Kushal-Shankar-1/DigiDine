@@ -96,7 +96,7 @@ const AddRecipe = (props) => {
                     <ListItem>
                         <ListItemText primary={`Image URL: ${image}`} />
                         <IconButton onClick={() => {
-                            const newInstruction = prompt('Enter the new instruction:');
+                            const newInstruction = prompt('Enter the image link:');
                             if (newInstruction) {
                                 setImage(newInstruction);
                             }

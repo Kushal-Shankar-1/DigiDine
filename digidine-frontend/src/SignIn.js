@@ -37,7 +37,7 @@ export default function SignIn(props) {
       })
       .catch((error) => {
         console.log(error);
-        alert('Invalid Credentials');
+        alert(error.response.data.error.split(':')[1]);
       });
   };
 
