@@ -1,5 +1,5 @@
 // App.js - Entry point
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -17,12 +17,6 @@ const defaultTheme = createTheme();
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
-  // Functions to handle login, logout, and fridge modifications
-  useEffect(() => {
-    // if(loggedIn !== )
-    console.log('Logged in', loggedIn);
-  }
-  , [loggedIn]);
   return (
     <Router>
         <ThemeProvider theme={defaultTheme}>
