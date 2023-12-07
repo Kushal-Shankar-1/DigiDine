@@ -289,6 +289,20 @@ def remove_recipe_flavour():
     execute_stored_procedure('remove_recipe_flavour', [recipe_id, flavour])
     return jsonify({"message": "Flavour removed from recipe successfully"}), 200
 
+def add_recipe_ingredient():
+    data = request.json
+    recipe_id = data['recipe_id']
+    ingredient = data['ingredient']
+    execute_stored_procedure('add_recipe_ingredient', [recipe_id, ingredient])
+    return jsonify({"message": "Ingredient added to recipe successfully"}), 200
+
+def remove_recipe_ingredient():
+    data = request.json
+    recipe_id = data['recipe_id']
+    ingredient = data['ingredient']
+    execute_stored_procedure('remove_recipe_ingredient', [recipe_id, ingredient])
+    return jsonify({"message": "Ingredient removed from recipe successfully"}), 200
+
 
 # Fetch Recipes Based on Fridge Ingredients
 def get_recipes_by_fridge(user_name):
@@ -419,12 +433,12 @@ def get_all_recipe_information(recipe_id):
             # Fetch flavours
             cursor.callproc('get_flavour_for_recipe', [recipe_id])
             flavours = next(cursor.stored_results()).fetchall()
-            recipe_data['flavours'] = [flavour['flavour'] for flavour in flavours]
+            recipe_data['flavours'] = flavours
 
             # Fetch ingredients
             cursor.callproc('get_ingredients_for_recipe', [recipe_id])
             ingredients = next(cursor.stored_results()).fetchall()
-            recipe_data['ingredients'] = [ingredient['ingredient'] for ingredient in ingredients]
+            recipe_data['ingredients'] = ingredients
 
             # Fetch cooking instructions
             cursor.callproc('get_recipe_instructions', [recipe_id])

@@ -1,4 +1,4 @@
-from views import add_recipe, get_all_restaurants, sign_in, register_user, register_chef, \
+from views import add_recipe, add_recipe_ingredient, get_all_restaurants, remove_recipe_ingredient, sign_in, register_user, register_chef, \
     get_dietary_restrictions, set_dietary_restrictions, get_user_flavour, set_user_flavour, get_fridge_ingredients, \
     set_fridge_ingredient, get_all_recipes, get_custom_recipes, update_recipe_image, update_recipe_description, \
     remove_recipe, add_cooking_instruction, edit_cooking_instruction, remove_cooking_instruction, add_recipe_flavour, \
@@ -28,6 +28,8 @@ def initialize_routes(app):
     app.add_url_rule('/recipe/remove-instruction', view_func=remove_cooking_instruction, methods=['POST'])
     app.add_url_rule('/recipe/add-flavour', view_func=add_recipe_flavour, methods=['POST'])
     app.add_url_rule('/recipe/remove-flavour', view_func=remove_recipe_flavour, methods=['POST'])
+    app.add_url_rule('/recipe/add-ingredient', view_func=add_recipe_ingredient, methods=['POST'])
+    app.add_url_rule('/recipe/remove-ingredient', view_func=remove_recipe_ingredient, methods=['POST'])
     app.add_url_rule('/recipes/fridge/<user_name>', view_func=get_recipes_by_fridge, methods=['GET'])
     app.add_url_rule('/recipes/preferred/<user_name>', view_func=get_preferred_recipes, methods=['GET'])
     app.add_url_rule('/update/chef-restaurant', view_func=update_chef_restaurant, methods=['POST'])

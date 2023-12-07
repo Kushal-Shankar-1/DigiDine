@@ -71,8 +71,9 @@ export default function Recipes(props) {
     props.disableButtons(true);
   }
 
-  const handleEdit = () => {
+  const handleEdit = (id) => {
     setEditView(true);
+    setSelectedRecipe(id);
     props.disableButtons(true);
   }  
 
@@ -116,7 +117,7 @@ export default function Recipes(props) {
                   </CardContent>
                   <CardActions>
                     <Button size="small" onClick={()=>handleExpand(card.recipe_id)}>View</Button>
-                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleEdit}>Edit</Button>}
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleEdit(card.recipe_id)}>Edit</Button>}
                     {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleRemove}>Remove</Button>}
                   </CardActions>
                 </Card>

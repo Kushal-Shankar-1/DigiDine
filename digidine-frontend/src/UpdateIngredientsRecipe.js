@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Container, Grid, Paper, Typography } from '@mui/material';
+import axios from 'axios';
 
 
-const UpdateIngredientsRecipe = () => {
-
-    const [currentIngredients, setCurrentIngredients] = useState(['Ingredient 1', 'Ingredient 2', 'Ingredient 3']);
-    const [availableIngredients, setAvailableIngredients] = useState(['Ingredient 4', 'Ingredient 5', 'Ingredient 6']);
+const UpdateIngredientsRecipe = (props) => {
+    const [recipe, setRecipe] = useState(props.recipe);
+    const [currentIngredients, setCurrentIngredients] = useState([]);
+    const [availableIngredients, setAvailableIngredients] = useState([]);
 
     const handleRemove = (event) => {
+        axios.post(`http://localhost:5000/recipe/remove-ingredient`, {recipe_id: recipe, ingredient:event})
         setAvailableIngredients([...availableIngredients, event]);
         setCurrentIngredients(currentIngredients.filter((r) => r !== event));
         console.log(event);
     }
 
     const handleAdd = (event) => {
-        setCurrentIngredients([...currentIngredients, event]);
-        setAvailableIngredients(availableIngredients.filter((r) => r !== event));
-        console.log(event);
+        axios.post(`http://localhost:5000/recipe/add-ingredient`, {recipe_id: recipe, ingredient:event})
+        .then((response) => {
+            setCurrentIngredients([...currentIngredients, event]);
+            setAvailableIngredients(availableIngredients.filter((r) => r !== event));
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
     }
+    useEffect(() => {
+        setCurrentIngredients(props.data.filter((i) => i.is_present == true).map((i) => i.ingredient_name));
+        setAvailableIngredients(props.data.filter((i) => i.is_present == false).map((i) => i.ingredient_name));
+    }, []);
 
     return (
         <Container maxWidth="md">

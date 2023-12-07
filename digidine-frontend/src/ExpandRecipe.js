@@ -30,7 +30,7 @@ const ExpandRecipe = (props) => {
     return (
         <Container maxWidth="md">
             <Card>
-                <img src={recipe.image==null || recipe.image==undefined} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
+                <img src={recipe.image == null || recipe.image == undefined} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions for {recipe.dish_name}
@@ -42,13 +42,31 @@ const ExpandRecipe = (props) => {
                             </ListItem>
                         ))}
                     </List>
+
                     {recipe.dietary_restrictions.length > 0 && <>
-                    <Typography variant="h6" xs={4} gutterBottom></Typography><Stack sx={{ pt: 4 }} direction="row" spacing={2}>
-                    <Typography><b>Adheres to:</b> </Typography>
-                        {recipe.dietary_restrictions.map((restriction, index) => (
+                        <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
+                            <Typography><b>Adheres to:</b> </Typography>
+                            {recipe.dietary_restrictions.map((restriction, index) => (
                                 <Typography>{restriction} </Typography>
-                        ))}
-                    </Stack></>}
+                            ))}
+                        </Stack>
+                    </>}
+                    {recipe.flavours.length > 0 && <>
+                        <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
+                            <Typography><b>Flavours:</b> </Typography>
+                            {recipe.flavours.filter(flavour=> flavour.is_present).map((flavour, index) => (
+                                <Typography>{flavour} </Typography>
+                            ))}
+                        </Stack>
+                    </>}
+                    {recipe.ingredients.length > 0 && <>
+                        <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
+                            <Typography><b>Ingredients:</b> </Typography>
+                            {recipe.ingredients.filter(ingredient=> ingredient.is_present).map((ingredient, index) => (
+                                <Typography>{ingredient} </Typography>
+                            ))}
+                        </Stack>
+                    </>}
                 </CardContent>
             </Card>
         </Container>
