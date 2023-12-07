@@ -139,10 +139,16 @@ def set_user_flavour(username):
 def get_fridge_ingredients(fridge_id):
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('get_fridge_ingredient', [fridge_id])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('get_fridge_ingredient', [fridge_id])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -152,31 +158,32 @@ def set_fridge_ingredient(fridge_id):
     data = request.json
     ingredient = data['ingredient']
     is_present = data['is_present']
-    try:
-        connection = create_db_connection()
-        if connection is None:
-            raise Exception("Failed to connect to the database")
-
-        cursor = connection.cursor()
-        cursor.callproc('set_fridge_ingredient', [fridge_id, ingredient, is_present])
-        cursor.close()
-        connection.commit()
-        return jsonify({"message": "Fridge ingredient updated successfully"}), 200
-    except Exception as e:
-        print (e)
-        return jsonify({"error": str(e)}), 500
-    finally:
-        connection.close()
-        
+    connection = create_db_connection()
+    if connection:
+        try:
+            execute_stored_procedure('set_fridge_ingredient', [fridge_id, ingredient, is_present])
+            return jsonify({"message": "Fridge ingredient updated successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            connection.close()
+    else:
+        return jsonify({"error": "Database connection failed"}), 500
 
 
 def get_all_recipes():
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('get_all_recipes', [])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('get_all_recipes', [])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -184,10 +191,16 @@ def get_all_recipes():
 def get_custom_recipes(username):
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('get_custom_recipes', [username])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('get_custom_recipes', [username])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -281,10 +294,16 @@ def remove_recipe_flavour():
 def get_recipes_by_fridge(user_name):
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('all_recipes_with_fridge_ingredients', [user_name])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('all_recipes_with_fridge_ingredients', [user_name])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -293,10 +312,16 @@ def get_recipes_by_fridge(user_name):
 def get_preferred_recipes(user_name):
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('preferred_recipes_with_fridge_ingredients', [user_name])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('preferred_recipes_with_fridge_ingredients', [user_name])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -306,11 +331,15 @@ def update_chef_restaurant():
     data = request.json
     user_name = data['user_name']
     restaurant_id = data['restaurant_id']
-
     connection = create_db_connection()
     if connection:
-        execute_stored_procedure('update_chef_restaurant', [user_name, restaurant_id])
-        return jsonify({"message": "Chef's restaurant updated successfully"}), 200
+        try:
+            execute_stored_procedure('update_chef_restaurant', [user_name, restaurant_id])
+            return jsonify({"message": "Chef's restaurant updated successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -322,10 +351,13 @@ def update_email_address():
     new_email = data['new_email']
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor()
-        cursor.callproc('update_email_address', [user_name_p, new_email])
-        # execute_stored_procedure('update_email_address', [user_name_p, new_email])
-        return jsonify({"message": "Email address updated successfully"}), 200
+        try:
+            execute_stored_procedure('update_email_address', [user_name_p, new_email])
+            return jsonify({"message": "Email address updated successfully"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 
@@ -334,10 +366,17 @@ def update_email_address():
 def get_chef_recipes(user_name):
     connection = create_db_connection()
     if connection:
-        cursor = connection.cursor(dictionary=True)
-        cursor.callproc('get_chef_recipe', [user_name])
-        result = next(cursor.stored_results()).fetchall()
-        return jsonify(result), 200
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.callproc('get_chef_recipe', [user_name])
+            result = next(cursor.stored_results()).fetchall()
+            return jsonify(result), 200
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"error": str(e)}), 500
+        finally:
+            cursor.close()
+            connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
 

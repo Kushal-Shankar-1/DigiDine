@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, Grid, Stack } from '@mui/material';
+import axios from 'axios';
 
-const ExpandRecipe = () => {
+const ExpandRecipe = (props) => {
     // Dummy image URL
     const imageUrl = 'https://dummyimage.com/200x100/000/fff';
 
@@ -14,22 +15,40 @@ const ExpandRecipe = () => {
         'Bake for 30 minutes or until golden brown',
         'Let it cool before serving'
     ]);
-
+    const [recipe, setRecipe] = useState(null);
+    useEffect(() => {
+        axios.get(`http://localhost:5000/recipes/information/${props.selectedRecipe}`)
+            .then(response => {
+                setRecipe(response.data);
+                console.log(response.data);
+            })
+            .catch(error => console.error('Error fetching data: ', error));
+    }
+        , []);
+    if (recipe == null)
+        return false;
     return (
         <Container maxWidth="md">
             <Card>
-                <img src={imageUrl} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
+                <img src={recipe.image==null || recipe.image==undefined} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
-                        Cooking Instructions
+                        Cooking Instructions for {recipe.dish_name}
                     </Typography>
                     <List>
-                        {instructions.map((instruction, index) => (
+                        {recipe.cooking_instructions.map((instruction, index) => (
                             <ListItem key={index}>
-                                <ListItemText primary={`Step ${index + 1}: ${instruction}`} />
+                                <ListItemText primary={`Step ${index + 1}: ${instruction.step_description}`} />
                             </ListItem>
                         ))}
                     </List>
+                    {recipe.dietary_restrictions.length > 0 && <>
+                    <Typography variant="h6" xs={4} gutterBottom></Typography><Stack sx={{ pt: 4 }} direction="row" spacing={2}>
+                    <Typography><b>Adheres to:</b> </Typography>
+                        {recipe.dietary_restrictions.map((restriction, index) => (
+                                <Typography>{restriction} </Typography>
+                        ))}
+                    </Stack></>}
                 </CardContent>
             </Card>
         </Container>

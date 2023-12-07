@@ -20,8 +20,12 @@ export default function ProfilePage() {
         // Perform submit logic here
         axios.post('http://localhost:5000/update/email-address', { user_name:user.user_name, new_email:email })
              .then((response) => {
-                 if(response.status == 200)
+                 if(response.status == 200){
                     setIsEditing(false);
+                    sessionStorage.setItem('user', JSON.stringify({...user, email:email}));
+                 }
+                    
+
              })
              .catch(error =>{ console.error('Error updating email: ', error);
               alert("Invalid email!");
