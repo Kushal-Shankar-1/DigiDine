@@ -44,10 +44,12 @@ export default function Header(props) {
     handleClose();
   };
 
-// React.useEffect (() => {
-//   setUser(sessionStorage.getItem('user'));
-//   console.log("USER", sessionStorage.getItem('user'));
-// }, []);
+React.useEffect (() => {
+  if(props.loggedIn !== loggedIn){
+    setLoggedIn(props.loggedIn);
+    window.location.reload();
+  }
+}, [props.loggedIn]);
   return (
     <AppBar position="absolute">
       <Toolbar >

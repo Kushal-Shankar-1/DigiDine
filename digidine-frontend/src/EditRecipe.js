@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
 import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 import axios from 'axios';
+import UpdateInstruction from './UpdateInstruction';
 
 const EditRecipe = (props) => {
     // Dummy image URL
@@ -72,7 +73,7 @@ const EditRecipe = (props) => {
                 <img src={imageUrl} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
                 <UpdateIngredientsRecipe recipe={recipe.recipe_id} data={recipe.ingredients}/>
                 <UpdateFlavourRecipe recipe={recipe.recipe_id} data={recipe.flavours}/>
-                <CardContent>
+                {/* <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions
                     </Typography>
@@ -103,7 +104,8 @@ const EditRecipe = (props) => {
                     }>
                         Add New Instruction
                     </Button></center>
-                </CardContent>
+                </CardContent> */}
+                <UpdateInstruction recipe={recipe.recipe_id} data={instructions}/>
             </Card>
         </Container>
     );

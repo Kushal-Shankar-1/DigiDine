@@ -211,8 +211,8 @@ def add_recipe():
     chef_name = data['chef_name']
     dish_name = data['dish_name']
     # Add more fields as required
-    execute_stored_procedure('add_recipe', [dish_name, chef_name])
-    return jsonify({"message": "Recipe added successfully"}), 201
+    returnedVal = execute_stored_procedure('add_recipe', [dish_name, chef_name])
+    return get_all_recipe_information(returnedVal[0][0]['recipe_id'])
 
 
 # Update Recipe Image
@@ -222,6 +222,7 @@ def update_recipe_image():
     chef_name = data['chef_name']
     image_link = data['image_link']
     execute_stored_procedure('update_recipe_image', [dish_name, chef_name, image_link])
+    
     return jsonify({"message": "Recipe image updated successfully"}), 200
 
 

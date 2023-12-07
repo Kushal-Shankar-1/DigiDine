@@ -55,7 +55,7 @@ const ExpandRecipe = (props) => {
                         <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
                             <Typography><b>Flavours:</b> </Typography>
                             {recipe.flavours.filter(flavour=> flavour.is_present).map((flavour, index) => (
-                                <Typography>{flavour} </Typography>
+                                <Typography>{flavour.flavour_name} </Typography>
                             ))}
                         </Stack>
                     </>}
@@ -63,7 +63,7 @@ const ExpandRecipe = (props) => {
                         <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
                             <Typography><b>Ingredients:</b> </Typography>
                             {recipe.ingredients.filter(ingredient=> ingredient.is_present).map((ingredient, index) => (
-                                <Typography>{ingredient} </Typography>
+                                <Typography>{ingredient.ingredient_name} </Typography>
                             ))}
                         </Stack>
                     </>}

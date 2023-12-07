@@ -205,7 +205,6 @@ CREATE TABLE recipe_cooking_instructions
     CONSTRAINT instruction_key PRIMARY KEY (recipe, step_number)
 );
 
-SELECT * FROM fridge_contains_ingredients;
     
 
 

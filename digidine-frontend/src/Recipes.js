@@ -23,8 +23,9 @@ export default function Recipes(props) {
   const [isChef, setIsChef] = useState(props.isChef);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const user = JSON.parse(sessionStorage.getItem('user'));
-  const handleRemove = () => {
+  const handleRemove = (recipe) => {
     // Open the dialog box to confirm deletion
+    setSelectedRecipe(recipe);
     setConfirmDelete(true);
   }
   useEffect(() => {
@@ -35,9 +36,11 @@ export default function Recipes(props) {
 
   const handleConfirmDelete = () => {
     // Perform the deletion logic here
-    axios.post(`http://localhost:5000/chef/remove-recipe` , {})
+    axios.post(`http://localhost:5000/chef/remove-recipe` , {recipe_id: selectedRecipe})
     .then((response) => {
-        console.log(response);
+      setSelectedRecipe(null);  
+      console.log(response);
+        window.location.reload();
     })
     .catch((error) => {
         console.log(error);
@@ -47,7 +50,7 @@ export default function Recipes(props) {
       setConfirmDelete(false);
     })
     
-    console.log('Recipe deleted');
+    console.log('Recipe deleted', selectedRecipe);
     
 
   }
@@ -66,14 +69,14 @@ export default function Recipes(props) {
   }
 
   const handleExpand = (id) => {
-    setExpandedView(true);
     setSelectedRecipe(id);
+    setExpandedView(true);
     props.disableButtons(true);
   }
 
   const handleEdit = (id) => {
-    setEditView(true);
     setSelectedRecipe(id);
+    setEditView(true);
     props.disableButtons(true);
   }  
 
@@ -118,7 +121,7 @@ export default function Recipes(props) {
                   <CardActions>
                     <Button size="small" onClick={()=>handleExpand(card.recipe_id)}>View</Button>
                     {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleEdit(card.recipe_id)}>Edit</Button>}
-                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleRemove}>Remove</Button>}
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleRemove(card.recipe_id)}>Remove</Button>}
                   </CardActions>
                 </Card>
               </Grid>

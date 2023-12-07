@@ -114,7 +114,7 @@ export default function ChefPage() {
           </Container>
         </Box>
         {selectedOption=="explore" && <Recipes isChef={true} chefName={user.user_name} data={data} disableButtons={setDisableButtons} />}
-        {selectedOption=="addNewRecipe" && <AddRecipe />}
+        {selectedOption=="addNewRecipe" && <AddRecipe chefName={user.user_name} setSelectedOption={setSelectedOption} />}
       </main>
   )
 } 

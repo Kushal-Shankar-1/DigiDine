@@ -417,16 +417,15 @@ BEGIN
       AND step_number = step_number_p;
 END $
 DELIMITER ;
-DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 
 DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 DELIMITER $
 CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT)
 BEGIN
 	DECLARE step_count INT;
-    SELECT COUNT(*) INTO step FROM recipe_cooking_instructions WHERE recipe = recipe_id_p;
+    SELECT MAX(step_number) INTO step_count FROM recipe_cooking_instructions WHERE recipe = recipe_id_p;
     IF step_count > 0 THEN
-		DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step;
+		DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step_count;
 	END IF;
 END $
 DELIMITER ;
@@ -496,9 +495,10 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS add_recipe;
 DELIMITER $
-CREATE PROCEDURE add_recipe(IN dish_name VARCHAR(64), IN user_name VARCHAR(64))
+CREATE PROCEDURE add_recipe(IN dish_name_p VARCHAR(64), IN user_name_p VARCHAR(64))
 BEGIN
-    INSERT INTO recipe (dish_name, chef) VALUES (dish_name, user_name);
+    INSERT INTO recipe (dish_name, chef) VALUES (dish_name_p, user_name_p);
+    SELECT recipe_id FROM recipe WHERE dish_name=dish_name_p AND chef=user_name_p;
 END $
 DELIMITER ;
 
