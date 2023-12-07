@@ -1,3 +1,4 @@
+USE digidine;
 DROP PROCEDURE IF EXISTS get_recipe_information;
 DELIMITER $
 CREATE PROCEDURE get_recipe_information(IN recipe_id_p INT)
@@ -23,19 +24,28 @@ BEGIN
 END**
 DELIMITER ;
 
+drop procedure if exists get_restaurants;
+DELIMITER $
+CREATE PROCEDURE get_restaurants()
+BEGIN
+SELECT * FROM restaurant;
+END $
+DELIMITER ;
+CALL get_restriction_for_recipe(@rid);
+SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=1));  
 drop procedure if exists get_flavour_for_recipe;
 DELIMITER **
-CREATE PROCEDURE get_flavour_for_recipe(IN recipe_id INT)
+CREATE PROCEDURE get_flavour_for_recipe(IN recipe_id_p INT)
 BEGIN
-    SELECT * FROM recipe_has_flavour where recipe = recipe_id;
+    SELECT flavour_name, recipe IS NOT NULL AS is_present FROM flavour LEFT OUTER JOIN (SELECT * FROM recipe_has_flavour WHERE recipe=recipe_id_p) ri ON flavour=flavour_name ;
 END**
 DELIMITER ;
 
 drop procedure if exists get_ingredients_for_recipe;
 DELIMITER **
-CREATE PROCEDURE get_ingredients_for_recipe(IN recipe_id INT)
+CREATE PROCEDURE get_ingredients_for_recipe(IN recipe_id_p INT)
 BEGIN
-    SELECT * FROM recipe_contains_ingredients where recipe = recipe_id;
+    SELECT ingredient_name, recipe IS NOT NULL AS is_present FROM ingredient LEFT OUTER JOIN (SELECT * FROM recipe_contains_ingredients WHERE recipe=recipe_id_p) ri ON ingredient=ingredient_name ;
 END**
 DELIMITER ;
 

@@ -9,11 +9,11 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function Home(props) {
     const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
     const [userType, setUserType] = useState('chef');
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
     useEffect(() => {
         if (sessionStorage.getItem('user') !== null) {
-            setLoggedIn(true);
-            setUserType(JSON.parse(sessionStorage.getItem('user')).restaurantName === undefined ? 'user' : 'chef');
+            setUserType(JSON.parse(sessionStorage.getItem('user')).restaurant_name === undefined ? 'user' : 'chef');
         }
         props.setLoggedIn(loggedIn);
     }
@@ -22,6 +22,6 @@ export default function Home(props) {
   return (
     loggedIn? (
       userType === 'user' ?(
-      <UserPage />) : <ChefPage />
+      <UserPage user={user} />) : <ChefPage user={user}/>
   ): (<SignIn setLoggedIn={setLoggedIn}/> ));
 }

@@ -1,3 +1,4 @@
+USE digidine;
 DROP PROCEDURE IF EXISTS register_user;
 DELIMITER **
 CREATE PROCEDURE register_user(
@@ -418,10 +419,15 @@ END $
 DELIMITER ;
 DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 
+DROP PROCEDURE IF EXISTS remove_cooking_instruction;
 DELIMITER $
-CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT, IN step_number_p INT)
+CREATE PROCEDURE remove_cooking_instruction(IN recipe_id_p INT)
 BEGIN
-    DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step_number_p;
+	DECLARE step_count INT;
+    SELECT COUNT(*) INTO step FROM recipe_cooking_instructions WHERE recipe = recipe_id_p;
+    IF step_count > 0 THEN
+		DELETE FROM recipe_cooking_instructions WHERE recipe = recipe_id_p AND step_number = step;
+	END IF;
 END $
 DELIMITER ;
 
@@ -429,7 +435,11 @@ DROP PROCEDURE IF EXISTS add_recipe_flavour;
 DELIMITER $
 CREATE PROCEDURE add_recipe_flavour(IN recipe_p INT, IN flavour_p VARCHAR(64))
 BEGIN
-    INSERT INTO recipe_has_flavour VALUES (recipe_p, flavour_p);
+	DECLARE req BOOLEAN;
+    SELECT NOT EXISTS(SELECT * FROM recipe_has_flavour WHERE recipe=recipe_p AND flavour=flavour_p) INTO req;
+    IF req THEN
+		INSERT INTO recipe_has_flavour VALUES (recipe_p, flavour_p);
+	END IF;
 END $
 DELIMITER ;
 
@@ -437,7 +447,11 @@ DROP PROCEDURE IF EXISTS remove_recipe_flavour;
 DELIMITER $
 CREATE PROCEDURE remove_recipe_flavour(IN recipe_p INT, IN flavour_p VARCHAR(64))
 BEGIN
-    DELETE FROM recipe_has_flavour WHERE recipe = recipe_p AND flavour = flavour_p;
+	DECLARE req BOOLEAN;
+    SELECT EXISTS(SELECT * FROM recipe_has_flavour WHERE recipe=recipe_p AND flavour=flavour_p) INTO req;
+    IF req THEN
+		DELETE FROM recipe_has_flavour WHERE recipe = recipe_p AND flavour = flavour_p;
+	END IF;
 END $
 DELIMITER ;
 
@@ -583,10 +597,9 @@ INSERT INTO ingredient
 VALUES ("onion", 150, 15, 45, 40);
 INSERT INTO ingredient
 VALUES ("tomato", 150, 15, 40, 45);
-INSERT INTO fridge_contains_ingredients
-VALUES ("potato", 0);
-INSERT INTO fridge_contains_ingredients
-VALUES ("onion", 0);
+
+SELECT * FROM recipe_cooking_instructions;
+
 
 call get_fridge_ingredient(0);
 
@@ -594,7 +607,8 @@ call set_user_flavour("hrishi", "sweet", false);
 select *
 from user_has_flavour_pref;
 
-call set_fridge_ingredient(0, "potato", 0);
+call set_fridge_ingredient(0, "potato", 1);
+call set_fridge_ingredient(0, "onion", 1);
 call get_fridge_ingredient(0);
 
 -- INSERT INTO difficulty VALUES(1,"easy");
@@ -615,9 +629,6 @@ VALUES (1, 'onion');
 CALL get_custom_recipes('hrishi');
 CALL get_custom_recipes('hari');
 
-
-INSERT INTO fridge_contains_ingredients
-VALUES ('onion', 1);
 CALL preferred_recipes_with_fridge_ingredients('hari');
 CALL preferred_recipes_with_fridge_ingredients('hrishi');
 
@@ -634,3 +645,29 @@ SELECT *
 FROM recipe_cooking_instructions;
 SELECT *
 FROM user;
+
+
+DROP PROCEDURE IF EXISTS get_recipe_information;
+DELIMITER $
+CREATE PROCEDURE get_recipe_information (IN recipe_id_p INT)
+BEGIN
+    SELECT * FROM recipe as r join recipe_cooking_instructions as i ON r.recipe_id = i.recipe WHERE recipe=recipe_id_p;
+END $
+DELIMITER ;
+SET @rid = 0;
+CALL get_recipe_information(@rid);
+
+drop procedure if exists get_restriction_for_recipe;
+DELIMITER **
+CREATE PROCEDURE get_restriction_for_recipe(IN recipe_id INT)
+BEGIN
+SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=recipe_id));  
+END**
+DELIMITER ;
+
+CALL update_email_address('hari', 'hari@bc.com1');
+SELECT * FROM chef;
+
+CALL get_restriction_for_recipe(1);
+CALL get_recipe_information(1);
+SELECT restrict_name FROM dietary_restriction dr WHERE NOT EXISTS(SELECT * FROM ingredient_has_restriction WHERE diet=restrict_name AND ingredient = ANY (SELECT ingredient FROM recipe_contains_ingredients WHERE recipe=1));  

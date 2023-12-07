@@ -15,7 +15,7 @@ import UpdateInventory from './UpdateInventory';
 import axios from 'axios';
 
 
-export default function UserPage() {
+export default function UserPage(props) {
 
     const [selectedOption, setSelectedOption] = useState('explore');
     const [exploreType, setExploreType] = useState('all');
@@ -23,7 +23,8 @@ export default function UserPage() {
     const [allData, setAllData] = useState([]);
     const [inventoryData, setInventoryData] = useState([]);
     const [preferencesData, setPreferencesData] = useState([]);
-    const [customData, setCustomData] = useState([]);
+    const [preferenceAndInventoryData, setPreferenceAndInventoryData] = useState([]);
+    const [user, setUser] = useState(props.user);
 
     const handleOption = (event) => {
         setExploreType(event.target.value);
@@ -31,10 +32,13 @@ export default function UserPage() {
 
     const [disableButtons, setDisableButtons] = useState(false);
     useEffect(() => {
+        if(selectedOption === "explore"){
+            setExploreType("all");
+
         axios.get('http://localhost:5000/recipes/all')
             .then((response) => {
-                console.log("RESPONSE AXIOS 1",response);
                 setAllData(response.data);
+                setData(response.data);
                 // sessionStorage.setItem('user', JSON.stringify(response.data));
                 // sessionStorage.setItem('loggedIn', true);
             })
@@ -43,27 +47,36 @@ export default function UserPage() {
                 // alert('Invalid Credentials');
             });
 
-            axios.get('http://localhost:5000/recipes/custom/hari')
+            axios.get(`http://localhost:5000/recipes/custom/${user.user_name}`)
             .then((response) => {
-                console.log("RESPONSE AXIOS 2",response);
-                setCustomData(response.data);
+                setPreferencesData(response.data);
                 
             })
             .catch((error) => {
                 console.log(error);
             });
 
-            // axios.get('http://localhost:5000/recipes/custom/hari')
-            // .then((response) => {
-            //     console.log("RESPONSE AXIOS 2",response);
-            //     setCustomData(response.data);
+            axios.get(`http://localhost:5000/recipes/preferred/${user.user_name}`)
+            .then((response) => {
+                console.log("RESPONSE AXIOS 2",response);
+                setPreferenceAndInventoryData(response.data);
                 
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            // });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
-    },[])
+            axios.get(`http://localhost:5000/recipes/fridge/${user.user_name}`)
+            .then((response) => {
+                setInventoryData(response.data);
+                
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+
+    },[selectedOption])
     useEffect(() => {
         if(exploreType === "all"){
             setData(allData);
@@ -75,7 +88,7 @@ export default function UserPage() {
             setData(preferencesData);
         }
         else if(exploreType === "custom"){
-            setData(customData);
+            setData(preferenceAndInventoryData);
         }
     },[exploreType]
     );
@@ -139,8 +152,8 @@ export default function UserPage() {
                 </Container>
             </Box>
             {selectedOption === "explore" && <Recipes data={data} isChef={false} disableButtons={setDisableButtons} />}
-            {selectedOption === "updateInventory" && <UpdateInventory />}
-            {selectedOption === "updatePreferences" && <UpdatePreferences />}
+            {selectedOption === "updateInventory" && <UpdateInventory fridgeId={user.fridge}/>}
+            {selectedOption === "updatePreferences" && <UpdatePreferences user={user.user_name} />}
         </>
     )
 }

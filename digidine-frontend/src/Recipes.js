@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import ExpandRecipe from './ExpandRecipe';
 import EditRecipe from './EditRecipe';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import axios from 'axios';
 
   
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -20,6 +21,7 @@ export default function Recipes(props) {
   const [editView, setEditView] = useState(false);
   const [data, setData] = useState([]);
   const [isChef, setIsChef] = useState(props.isChef);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const user = JSON.parse(sessionStorage.getItem('user'));
   const handleRemove = () => {
     // Open the dialog box to confirm deletion
@@ -33,9 +35,21 @@ export default function Recipes(props) {
 
   const handleConfirmDelete = () => {
     // Perform the deletion logic here
+    axios.post(`http://localhost:5000/chef/remove-recipe` , {})
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    .finally(() => {
+      // Close the dialog box
+      setConfirmDelete(false);
+    })
+    
     console.log('Recipe deleted');
-    // Close the dialog box
-    setConfirmDelete(false);
+    
+
   }
 
   const handleCancelDelete = () => {
@@ -51,13 +65,15 @@ export default function Recipes(props) {
     props.disableButtons(false);
   }
 
-  const handleExpand = () => {
+  const handleExpand = (id) => {
     setExpandedView(true);
+    setSelectedRecipe(id);
     props.disableButtons(true);
   }
 
-  const handleEdit = () => {
+  const handleEdit = (id) => {
     setEditView(true);
+    setSelectedRecipe(id);
     props.disableButtons(true);
   }  
 
@@ -67,11 +83,11 @@ export default function Recipes(props) {
       <Container sx={{ py: 8 }} maxWidth="md">
         {expandedView ?
           <>
-            <ExpandRecipe />
+            <ExpandRecipe selectedRecipe={selectedRecipe}/>
             <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
           </>
           : editView? 
-           <><EditRecipe /> 
+           <><EditRecipe selectedRecipe={selectedRecipe}/> 
            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
            </>: 
           <Grid container spacing={4}>
@@ -100,9 +116,9 @@ export default function Recipes(props) {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={handleExpand}>View</Button>
-                    {isChef == true && <Button size="small" onClick={handleEdit}>Edit</Button>}
-                    {isChef == true && <Button size="small" onClick={handleRemove}>Remove</Button>}
+                    <Button size="small" onClick={()=>handleExpand(card.recipe_id)}>View</Button>
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleEdit(card.recipe_id)}>Edit</Button>}
+                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={handleRemove}>Remove</Button>}
                   </CardActions>
                 </Card>
               </Grid>
