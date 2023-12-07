@@ -5,17 +5,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddRecipe = (props) => {
     // Dummy image URL
     const imageUrl = 'https://dummyimage.com/200x100/000/fff';
-
+    const navigate = useNavigate();
     // State variable to store the instructions
     const [instructions, setInstructions] = useState([]);
     const [image, setImage] = useState('');
     const [recipe, setRecipe] = useState(null);
     const [data, setData] = useState(null);
-
+    const handleBack = () => {
+        props.setSelectedOption("explore");;
+    }
     // Function to remove an instruction from the instructions array
     const removeInstruction = () => {
         const updatedInstructions = [...instructions];
@@ -102,7 +105,7 @@ const AddRecipe = (props) => {
                     </ListItem>
                 </CardContent>
                 <UpdateIngredientsRecipe recipe={recipe} data={data.ingredients} />
-                <UpdateFlavourRecipe recipe={recipe} data={data.ingredients} />
+                <UpdateFlavourRecipe recipe={recipe} data={data.flavours} />
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions
@@ -137,7 +140,7 @@ const AddRecipe = (props) => {
                 </CardContent>
             </Card>
             </>}
-
+            <center><Button  style={{marginTop:'5%'}} variant="contained" onClick={handleBack}>Back</Button></center>
         </Container>
     );
 };
