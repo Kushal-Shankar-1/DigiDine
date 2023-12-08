@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
+import matplotlib.pyplot as plt
 import seaborn as sns
-
 from config import Config
 
 # Configuration for your database
@@ -12,6 +11,7 @@ db_config = {
     "password": Config.DB_PASSWORD,
     "database": Config.DB_NAME
 }
+
 
 
 def execute_procedure(procedure_name):
@@ -37,68 +37,35 @@ def execute_procedure(procedure_name):
             cursor.close()
             conn.close()
 
-
 def plot_user_dietary_restrictions(result):
-    df = pd.DataFrame(result, columns=['Diet', 'Count'])
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x='Diet', y='Count', data=df)
-    plt.title('User Dietary Restrictions')
-    plt.xlabel('Diet')
-    plt.ylabel('Count')
-    plt.show()
-
-
-def plot_ingredient_distribution(result):
-    df = pd.DataFrame(result, columns=['Ingredient', 'Count'])
+    df = pd.DataFrame(result, columns=['count', 'restrict_name'])
+    # user_df = df.groupby(['user_name', 'first_name', 'last_name'])['count'].sum().reset_index()
     plt.figure(figsize=(12, 8))
-    sns.barplot(x='Ingredient', y='Count', data=df)
-    plt.title('Ingredient Distribution in Fridges')
-    plt.xlabel('Ingredient')
-    plt.ylabel('Count')
+    sns.barplot(x='restrict_name', y='count', data=df)
+    plt.title('User Count for Dietary Restrictions(Top 7)')
+    plt.xlabel('Dietary Restriction')
+    plt.ylabel('User Count')
+    plt.xticks(rotation=45, ha='right')
     plt.show()
 
 
 def plot_user_flavour_preferences(result):
-    df = pd.DataFrame(result, columns=['User', 'Flavour'])
+    df = pd.DataFrame(result, columns=['Count', 'Flavour'])
     plt.figure(figsize=(12, 8))
-    sns.countplot(x='Flavour', data=df, hue='User')
-    plt.title('User Flavour Preferences')
+    sns.barplot(x='Flavour', y='Count', data=df)
+    plt.title('User Flavour Preferences (Top 7)')
     plt.xlabel('Flavour')
-    plt.ylabel('Count')
-    plt.show()
-
-
-def plot_user_fridge_color_distribution(result):
-    df = pd.DataFrame(result, columns=['User', 'Fridge Color'])
-    plt.figure(figsize=(10, 8))
-    sns.countplot(x='Fridge Color', data=df, hue='User')
-    plt.title('User Fridge Color Distribution')
-    plt.xlabel('Fridge Color')
-    plt.ylabel('Count')
+    plt.ylabel('Count of Users')
     plt.show()
 
 
 def plot_recipe_flavour_distribution(result):
-    df = pd.DataFrame(result, columns=['Recipe', 'Flavour'])
+    df = pd.DataFrame(result, columns=['Count', 'Flavour'])
     plt.figure(figsize=(12, 8))
-    sns.countplot(x='Flavour', data=df, hue='Recipe')
-    plt.title('Recipe Flavour Distribution')
+    sns.barplot(x='Flavour', data=df, y='Count')
+    plt.title('Recipe Flavour Distribution (Top 7)')
     plt.xlabel('Flavour')
-    plt.ylabel('Count')
-    plt.show()
-
-
-def plot_user_ingredient_preferences(result):
-    df = pd.DataFrame(result, columns=['User', 'Ingredient'])
-    pivot_table = df.pivot_table(index='User', columns='Ingredient', aggfunc='size').fillna(0)
-    if pivot_table.empty:
-        print("No data to plot.")
-        return
-    plt.figure(figsize=(14, 10))
-    sns.heatmap(pivot_table, cmap='viridis', cbar=False)
-    plt.title('User Ingredient Preferences')
-    plt.xlabel('Ingredient')
-    plt.ylabel('User')
+    plt.ylabel('Count of Recipes')
     plt.show()
 
 
@@ -111,7 +78,6 @@ def plot_ingredient_dietary_restrictions(result):
     plt.ylabel('Count')
     plt.show()
 
-
 def plot_chef_recipe_count(result):
     df = pd.DataFrame(result, columns=['Chef', 'Recipe Count'])
     plt.figure(figsize=(10, 6))
@@ -121,60 +87,18 @@ def plot_chef_recipe_count(result):
     plt.ylabel('Recipe Count')
     plt.show()
 
-
-def plot_user_ingredient_caloric_intake(result):
-    df = pd.DataFrame(result, columns=['User', 'Ingredient', 'Calories'])
-    plt.figure(figsize=(12, 8))
-    sns.scatterplot(x='Calories', y='User', data=df)
-    plt.title('User Ingredient Caloric Intake')
-    plt.xlabel('Calories')
-    plt.ylabel('User')
-    plt.show()
-
-
-def plot_user_ingredient_preferences_heatmap(result):
-    df = pd.DataFrame(result, columns=['User', 'Ingredient'])
-
-    pivot_table = df.pivot_table(index='User', columns='Ingredient', aggfunc='size').fillna(0)
-
-    if pivot_table.empty:
-        print("No data to plot.")
-        return
-    plt.figure(figsize=(14, 10))
-    sns.heatmap(pivot_table, cmap='viridis', cbar=True, cbar_kws={'label': 'Count'})
-    plt.title('User Ingredient Preferences Heatmap')
-    plt.xlabel('Ingredient')
-    plt.ylabel('User')
-    plt.show()
-
-
 # Call the procedures and visualize the results
 user_dietary_restrictions_result = execute_procedure('GetUserDietaryRestrictions')
 plot_user_dietary_restrictions(user_dietary_restrictions_result)
 
-ingredient_distribution_result = execute_procedure('GetIngredientDistributionInFridges')
-plot_ingredient_distribution(ingredient_distribution_result)
-
 user_flavour_preferences_result = execute_procedure('GetUserFlavourPreferences')
 plot_user_flavour_preferences(user_flavour_preferences_result)
 
-user_fridge_color_distribution_result = execute_procedure('GetUserFridgeColorDistribution')
-plot_user_fridge_color_distribution(user_fridge_color_distribution_result)
-
 recipe_flavour_distribution_result = execute_procedure('GetRecipeFlavourDistribution')
 plot_recipe_flavour_distribution(recipe_flavour_distribution_result)
-
-user_ingredient_preferences_result = execute_procedure('GetUserIngredientPreferences')
-plot_user_ingredient_preferences(user_ingredient_preferences_result)
 
 ingredient_dietary_restrictions_result = execute_procedure('GetIngredientDietaryRestrictions')
 plot_ingredient_dietary_restrictions(ingredient_dietary_restrictions_result)
 
 chef_recipe_count_result = execute_procedure('GetChefRecipeCount')
 plot_chef_recipe_count(chef_recipe_count_result)
-
-user_ingredient_caloric_intake_result = execute_procedure('GetUserIngredientCaloricIntake')
-plot_user_ingredient_caloric_intake(user_ingredient_caloric_intake_result)
-
-user_ingredient_preferences_heatmap_result = execute_procedure('GetUserIngredientPreferencesHeatmap')
-plot_user_ingredient_preferences_heatmap(user_ingredient_preferences_heatmap_result)
