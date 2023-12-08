@@ -30,51 +30,66 @@ const ExpandRecipe = (props) => {
     return (
         <Container maxWidth="md">
             <Card>
-            <CardMedia
+                <CardMedia
                     component="div"
                     sx={{
-                      // 16:9
-                      pt: '56.25%',
+                        // 16:9
+                        pt: '56.25%',
                     }}
-                    image={recipe.image==null || recipe.image==""? "https://source.unsplash.com/random?wallpapers": recipe.image}
-                  />
+                    image={recipe.image == null || recipe.image == "" ? "https://source.unsplash.com/random?wallpapers" : recipe.image}
+                />
                 {/* <img src={recipe.image} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} /> */}
+                
                 <CardContent>
-                    <Typography variant="h5" component="div" gutterBottom>
+                {recipe.ingredients.length > 0 && <>
+                        <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
+                            <Typography><b>Ingredients:</b> </Typography>
+                            {recipe.ingredients.filter(ingredient => ingredient.is_present).map((ingredient, index) => (
+                                <Typography><i>{ingredient.ingredient_name}</i> </Typography>
+                            ))}
+                        </Stack>
+                    </>}
+                    <Typography variant="h5" component="div" gutterBottom style={{marginTop:'5%'}}>
                         Cooking Instructions for {recipe.dish_name}
                     </Typography>
                     <List>
                         {recipe.cooking_instructions.map((instruction, index) => (
                             <ListItem key={index}>
-                                <ListItemText primary={`Step ${index + 1}: ${instruction.step_description}`} />
+                                <ListItemText primary={<><b>Step {index + 1}: </b> {instruction.step_description}</>} />
                             </ListItem>
                         ))}
                     </List>
 
-                    {recipe.dietary_restrictions.length > 0 && <>
+                    {/* {recipe.dietary_restrictions.length > 0 && <>
                         <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
                             <Typography><b>Adheres to:</b> </Typography>
                             {recipe.dietary_restrictions.map((restriction, index) => (
-                                <Typography>{restriction} </Typography>
+                                <div key={index} style={{ overflowWrap: 'break-word' }}>
+                                <Typography>{restriction}</Typography>
+                            </div>
                             ))}
                         </Stack>
                     </>}
+                     */}
+
                     {recipe.flavours.length > 0 && <>
                         <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
                             <Typography><b>Flavours:</b> </Typography>
-                            {recipe.flavours.filter(flavour=> flavour.is_present).map((flavour, index) => (
-                                <Typography>{flavour.flavour_name} </Typography>
+                            {recipe.flavours.filter(flavour => flavour.is_present).map((flavour, index) => (
+                                <Typography><i>{flavour.flavour_name}</i> </Typography>
                             ))}
                         </Stack>
                     </>}
-                    {recipe.ingredients.length > 0 && <>
-                        <Stack sx={{ pt: 4 }} direction="row" spacing={2}>
-                            <Typography><b>Ingredients:</b> </Typography>
-                            {recipe.ingredients.filter(ingredient=> ingredient.is_present).map((ingredient, index) => (
-                                <Typography>{ingredient.ingredient_name} </Typography>
+                    {recipe.dietary_restrictions.length > 0 && (
+                        <div style={{ paddingTop: '1rem', display: 'flex', flexDirection: 'row', gap: '1rem', flexWrap: 'wrap' }}>
+                            <Typography><b>Adheres to:</b></Typography>
+                            {recipe.dietary_restrictions.map((restriction, index) => (
+                                <div key={index} style={{ overflowWrap: 'break-word' }}>
+                                    <Typography><i>{restriction}</i></Typography>
+                                </div>
                             ))}
-                        </Stack>
-                    </>}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </Container>

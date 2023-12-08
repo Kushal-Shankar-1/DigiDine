@@ -49,37 +49,28 @@ const SignUpChef = () => {
             alert("Passwords don't match");
             return;
         }
+        if(username == '' || password == '' || firstName == '' || lastName == '' || email == ''){
+            alert("Please fill all the fields");
+            return;
+        }
         console.log("Selected Restaurant",selectedRestaurant);
-        fetch('http://localhost:5000/register/chef', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        axios.post('http://localhost:5000/register/chef', 
+            {
                 username: username,
                 password: password,
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
                 restaurantId: selectedRestaurant.restaurant_id
-            }),
-        })
+            }
+        )
             .then((response) => {
-                if (response.ok) {
-                    setIsError(false);
-                    navigate('/');
-                    return response.json();
-
-                } else {
-                    setIsError(true);
-                    throw new Error('Something went wrong...');
-                }
-            })
-            .then((data) => {
-                console.log(data);
+                alert('Registration Successful');
+                navigate('/');
             })
             .catch((error) => {
                 console.error('Error:', error);
+                alert('Registration Failed: ' + error.response.data.error.split(':')[1]);
             })
     };
 
@@ -87,11 +78,6 @@ const SignUpChef = () => {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            {isError && (
-                <div style={{ position: 'fixed', top: '0', left: '0', width: '100%', backgroundColor: 'red', color: 'white', padding: '10px', textAlign: 'center' }}>
-                    Error occurred during account creation
-                </div>
-            )}
             <Card style={{ width: '400px', padding: '20px' }}>
                 <div>
                     <Typography variant="h4" style={{marginBottom: '10px'}}>Sign Up</Typography>

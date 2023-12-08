@@ -15,6 +15,8 @@ def register_user():
         return jsonify({"message": "User registered successfully"}), 201
     except mysql.connector.Error as err:
         return jsonify({"error": str(err)}), 400  # Adjust the error handling as needed
+    except KeyError as e:
+        return jsonify({"error": f"Missing required field: {e}"}), 400
 
 
 def register_chef():
@@ -28,7 +30,8 @@ def register_chef():
     except mysql.connector.Error as err:
         # The error message from the stored procedure will be returned in the response
         return jsonify({"error": str(err)}), 400
-
+    except KeyError as e:
+        return jsonify({"error": f"Missing required field: {e}"}), 400
 
 def sign_in():
     data = request.json
