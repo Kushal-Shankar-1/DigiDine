@@ -5,7 +5,7 @@ import seaborn as sns
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'Hrishi99',
+    'password': 'root',
     'database': 'digidine',
 }
 
