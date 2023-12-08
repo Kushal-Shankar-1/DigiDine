@@ -50,6 +50,14 @@ const EditRecipe = (props) => {
                         <IconButton onClick={() => {
                             const newImage = prompt('Enter the new image link:');
                             if (newImage) {
+                                axios.post(`http://localhost:5000/chef/update-recipe-image`, { image_link: newImage, dish_name: recipe.dish_name ,chef_name: recipe.chef })
+                                    .then((response) => {
+                                        console.log(response);
+                                        setImage(newImage);
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    });
                                 setImage(newImage);
                             }
                         }}>

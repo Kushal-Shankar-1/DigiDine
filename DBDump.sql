@@ -238,9 +238,9 @@ DROP TABLE IF EXISTS `recipe`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `recipe` (
   `recipe_id` int NOT NULL AUTO_INCREMENT,
-  `image` varchar(256) DEFAULT NULL,
+  `image` varchar(512) DEFAULT NULL,
   `dish_name` varchar(64) NOT NULL,
-  `description` varchar(128) DEFAULT NULL,
+  `description` varchar(512) DEFAULT NULL,
   `chef` varchar(64) NOT NULL,
   PRIMARY KEY (`recipe_id`),
   UNIQUE KEY `dish_chef_uniqueness` (`dish_name`,`chef`),
@@ -296,7 +296,7 @@ DROP TABLE IF EXISTS `recipe_cooking_instructions`;
 CREATE TABLE `recipe_cooking_instructions` (
   `recipe` int NOT NULL,
   `step_number` int NOT NULL,
-  `step_description` varchar(64) NOT NULL,
+  `step_description` varchar(512) NOT NULL,
   PRIMARY KEY (`recipe`,`step_number`),
   CONSTRAINT `recipe_instruction` FOREIGN KEY (`recipe`) REFERENCES `recipe` (`recipe_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

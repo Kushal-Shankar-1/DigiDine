@@ -35,6 +35,10 @@ const SignUp = () => {
     };
 
     const handleSubmit = () => {
+        if(username == '' || password == '' || firstName == '' || lastName == '' || contact == ''){
+            alert("Please fill all the fields");
+            return;
+        }
         axios.post('http://localhost:5000/register/user', {
             firstName: firstName,
             lastName: lastName,
@@ -44,14 +48,13 @@ const SignUp = () => {
             fridgeColor: fridgeColor
         })
             .then((response) => {
-                console.log(response);
+                alert('Registration Successful');
                 // sessionStorage.setItem('user', JSON.stringify(response.data));
                 // sessionStorage.setItem('loggedIn', true);
                 navigate('/');
             })
             .catch((error) => {
-                console.log(error);
-                alert('Registeration Failed');
+                alert('Registration Failed: ' + error.response.data.error.split(':')[1]);
             });
     }
 
@@ -61,39 +64,41 @@ const SignUp = () => {
                     <div>
                         <Typography variant="h4">Sign Up</Typography>
                         <form>
-                        <TextField
+                        <TextField fullWidth
                                 label="Username"
                                 value={username}
                                 onChange={e=>setUsername(e.target.value)}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="First Name"
                                 value={firstName}
                                 onChange={handleFirstNameChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="Last Name"
                                 value={lastName}
                                 onChange={handleLastNameChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="Email Id"
                                 value={contact}
                                 onChange={handleContactChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="Password"
                                 value={password}
+                                type="password"
                                 onChange={handlePasswordChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <TextField
+                            <TextField fullWidth
                                 label="Confirm Password"
                                 value={confirmPassword}
+                                type="password"
                                 onChange={handleConfirmPasswordChange}
                                 style={{ marginBottom: '10px' }}
                             />
