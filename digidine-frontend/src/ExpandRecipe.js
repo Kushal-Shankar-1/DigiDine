@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, Grid, Stack } from '@mui/material';
+import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, Grid, Stack, CardMedia } from '@mui/material';
 import axios from 'axios';
 
 const ExpandRecipe = (props) => {
@@ -30,7 +30,15 @@ const ExpandRecipe = (props) => {
     return (
         <Container maxWidth="md">
             <Card>
-                <img src={recipe.image == null || recipe.image == undefined} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} />
+            <CardMedia
+                    component="div"
+                    sx={{
+                      // 16:9
+                      pt: '56.25%',
+                    }}
+                    image={recipe.image==null || recipe.image==""? "https://source.unsplash.com/random?wallpapers": recipe.image}
+                  />
+                {/* <img src={recipe.image} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} /> */}
                 <CardContent>
                     <Typography variant="h5" component="div" gutterBottom>
                         Cooking Instructions for {recipe.dish_name}

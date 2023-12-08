@@ -1,4 +1,4 @@
-USE digidine;
+USE digidine2;
 DROP PROCEDURE IF EXISTS register_user;
 DELIMITER **
 CREATE PROCEDURE register_user(
@@ -501,6 +501,7 @@ BEGIN
     SELECT recipe_id FROM recipe WHERE dish_name=dish_name_p AND chef=user_name_p;
 END $
 DELIMITER ;
+SElECT * FROM chef;
 
 DROP PROCEDURE IF EXISTS update_recipe_image;
 DELIMITER $
@@ -555,14 +556,13 @@ BEGIN
 END $
 DELIMITER ;
 
-CALL register_user('hrishi', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 'BLUE');
-CALL register_user('hari', 'password', 'Hari', 'Columbus', 'hari@gmail.com', 'RED');
-INSERT INTO address
-VALUES (1, 25, "street", 123, "State");
+# CALL register_user('hrishi', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 'BLUE');
+# CALL register_user('hari', 'password', 'Hari', 'Columbus', 'hari@gmail.com', 'RED');
+# INSERT INTO address VALUES (1, 25, "street", 123, "State");
 INSERT INTO restaurant
 VALUES (1, 'name', 'cuisine', 1);
 
-CALL register_chef('hrishi2', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 1);
+# CALL register_chef('hrishi2', 'The asdjabnssda', 'ln', 'fn', 'hri@gmail.com', 1);
 select *
 from chef;
 
