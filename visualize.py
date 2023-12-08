@@ -1,12 +1,16 @@
+import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+
+from config import Config
+
+# Configuration for your database
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'root',
-    'database': 'digidine',
+    "host": Config.DB_HOST,
+    "user": Config.DB_USER,
+    "password": Config.DB_PASSWORD,
+    "database": Config.DB_NAME
 }
 
 
@@ -33,6 +37,7 @@ def execute_procedure(procedure_name):
             cursor.close()
             conn.close()
 
+
 def plot_user_dietary_restrictions(result):
     df = pd.DataFrame(result, columns=['Diet', 'Count'])
     plt.figure(figsize=(10, 6))
@@ -42,6 +47,7 @@ def plot_user_dietary_restrictions(result):
     plt.ylabel('Count')
     plt.show()
 
+
 def plot_ingredient_distribution(result):
     df = pd.DataFrame(result, columns=['Ingredient', 'Count'])
     plt.figure(figsize=(12, 8))
@@ -50,6 +56,7 @@ def plot_ingredient_distribution(result):
     plt.xlabel('Ingredient')
     plt.ylabel('Count')
     plt.show()
+
 
 def plot_user_flavour_preferences(result):
     df = pd.DataFrame(result, columns=['User', 'Flavour'])
@@ -70,6 +77,7 @@ def plot_user_fridge_color_distribution(result):
     plt.ylabel('Count')
     plt.show()
 
+
 def plot_recipe_flavour_distribution(result):
     df = pd.DataFrame(result, columns=['Recipe', 'Flavour'])
     plt.figure(figsize=(12, 8))
@@ -78,6 +86,7 @@ def plot_recipe_flavour_distribution(result):
     plt.xlabel('Flavour')
     plt.ylabel('Count')
     plt.show()
+
 
 def plot_user_ingredient_preferences(result):
     df = pd.DataFrame(result, columns=['User', 'Ingredient'])
@@ -102,6 +111,7 @@ def plot_ingredient_dietary_restrictions(result):
     plt.ylabel('Count')
     plt.show()
 
+
 def plot_chef_recipe_count(result):
     df = pd.DataFrame(result, columns=['Chef', 'Recipe Count'])
     plt.figure(figsize=(10, 6))
@@ -111,6 +121,7 @@ def plot_chef_recipe_count(result):
     plt.ylabel('Recipe Count')
     plt.show()
 
+
 def plot_user_ingredient_caloric_intake(result):
     df = pd.DataFrame(result, columns=['User', 'Ingredient', 'Calories'])
     plt.figure(figsize=(12, 8))
@@ -119,6 +130,7 @@ def plot_user_ingredient_caloric_intake(result):
     plt.xlabel('Calories')
     plt.ylabel('User')
     plt.show()
+
 
 def plot_user_ingredient_preferences_heatmap(result):
     df = pd.DataFrame(result, columns=['User', 'Ingredient'])
@@ -134,7 +146,6 @@ def plot_user_ingredient_preferences_heatmap(result):
     plt.xlabel('Ingredient')
     plt.ylabel('User')
     plt.show()
-
 
 
 # Call the procedures and visualize the results
