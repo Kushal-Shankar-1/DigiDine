@@ -10,7 +10,9 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import UserIcon from '@mui/icons-material/Person';
 import Logout from '@mui/icons-material/Logout';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 export default function Header(props) {
@@ -44,19 +46,33 @@ export default function Header(props) {
     handleClose();
   };
 
+  const handleDownload = () => {
+    axios.get('http://localhost:5000/visualize')
+    .then((response) => {
+      console.log("Downloaded successfully", response);
+      alert("Downloaded successfully into visualization/")
+    })
+    .catch((error) => {
+      console.log("Error downloading", error);
+    })
+  }
+
 React.useEffect (() => {
   if(props.loggedIn !== loggedIn){
     setLoggedIn(props.loggedIn);
     window.location.reload();
   }
 }, [props.loggedIn]);
-  return (
+  
+return (
     <AppBar position="absolute">
       <Toolbar >
-        <Typography style={{ justifySelf: 'start', marginRight: '50%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
+        <Typography style={{ justifySelf: 'start', marginRight: '10%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
           DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
         </Typography>
-        {props.loggedIn == true && <>
+        <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} />
+        <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
+        {props.loggedIn == true && user!==null && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
         {user.user_name}
