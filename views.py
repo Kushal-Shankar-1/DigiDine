@@ -3,7 +3,8 @@ from flask import request, jsonify
 from flask import session
 
 from db import create_db_connection, execute_stored_procedure
-from utils import login_required
+import threading
+import visualize
 
 
 def register_user():
@@ -456,3 +457,13 @@ def get_all_recipe_information(recipe_id):
             connection.close()
     else:
         return jsonify({"error": "Database connection failed"}), 500
+
+def visualize_data():
+    try:
+        # Run the visualize.py in a separate thread
+        thread = threading.Thread(target=visualize.run_visualizations, args=())
+        thread.daemon = True
+        thread.start()
+        return jsonify({"message": "Visualization started"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

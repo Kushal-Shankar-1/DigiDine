@@ -1,9 +1,10 @@
-from views import add_recipe, add_recipe_ingredient, get_all_restaurants, remove_recipe_ingredient, sign_in, register_user, register_chef, \
+from views import add_recipe, add_recipe_ingredient, get_all_restaurants, remove_recipe_ingredient, sign_in, \
+    register_user, register_chef, \
     get_dietary_restrictions, set_dietary_restrictions, get_user_flavour, set_user_flavour, get_fridge_ingredients, \
     set_fridge_ingredient, get_all_recipes, get_custom_recipes, update_recipe_image, update_recipe_description, \
     remove_recipe, add_cooking_instruction, edit_cooking_instruction, remove_cooking_instruction, add_recipe_flavour, \
     remove_recipe_flavour, get_recipes_by_fridge, get_preferred_recipes, update_chef_restaurant, update_email_address, \
-    get_chef_recipes, get_all_recipe_information
+    get_chef_recipes, get_all_recipe_information, visualize_data
 
 
 def initialize_routes(app):
@@ -37,3 +38,4 @@ def initialize_routes(app):
     app.add_url_rule('/recipes/chef/<user_name>', view_func=get_chef_recipes, methods=['GET'])
     app.add_url_rule('/recipes/information/<int:recipe_id>', view_func=get_all_recipe_information, methods=['GET'])
     app.add_url_rule('/restaurants', view_func=get_all_restaurants, methods=['GET'])
+    app.add_url_rule('/visualize', view_func=visualize_data, methods=['GET'])
