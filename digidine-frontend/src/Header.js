@@ -62,7 +62,8 @@ React.useEffect (() => {
     window.location.reload();
   }
 }, [props.loggedIn]);
-  return (
+  
+return (
     <AppBar position="absolute">
       <Toolbar >
         <Typography style={{ justifySelf: 'start', marginRight: '10%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
@@ -70,7 +71,7 @@ React.useEffect (() => {
         </Typography>
         <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} />
         <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '10%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
-        {props.loggedIn == true && <>
+        {props.loggedIn == true && user!==null && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
         {user.user_name}
