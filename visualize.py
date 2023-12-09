@@ -154,38 +154,37 @@ def plot_user_ingredient_preferences_heatmap(result):
 
 def run_visualizations():
     os.makedirs("data_visualization", exist_ok=True)
+    # Call the procedures and visualize the results
+    user_dietary_restrictions_result = execute_procedure('GetUserDietaryRestrictions')
+    plot_user_dietary_restrictions(user_dietary_restrictions_result)
 
+    ingredient_distribution_result = execute_procedure('GetIngredientDistributionInFridges')
+    plot_ingredient_distribution(ingredient_distribution_result)
 
-# Call the procedures and visualize the results
-user_dietary_restrictions_result = execute_procedure('GetUserDietaryRestrictions')
-plot_user_dietary_restrictions(user_dietary_restrictions_result)
+    user_flavour_preferences_result = execute_procedure('GetUserFlavourPreferences')
+    plot_user_flavour_preferences(user_flavour_preferences_result)
 
-ingredient_distribution_result = execute_procedure('GetIngredientDistributionInFridges')
-plot_ingredient_distribution(ingredient_distribution_result)
+    user_fridge_color_distribution_result = execute_procedure('GetUserFridgeColorDistribution')
+    plot_user_fridge_color_distribution(user_fridge_color_distribution_result)
 
-user_flavour_preferences_result = execute_procedure('GetUserFlavourPreferences')
-plot_user_flavour_preferences(user_flavour_preferences_result)
+    recipe_flavour_distribution_result = execute_procedure('GetRecipeFlavourDistribution')
+    plot_recipe_flavour_distribution(recipe_flavour_distribution_result)
 
-user_fridge_color_distribution_result = execute_procedure('GetUserFridgeColorDistribution')
-plot_user_fridge_color_distribution(user_fridge_color_distribution_result)
+    user_ingredient_preferences_result = execute_procedure('GetUserIngredientPreferences')
+    plot_user_ingredient_preferences(user_ingredient_preferences_result)
 
-recipe_flavour_distribution_result = execute_procedure('GetRecipeFlavourDistribution')
-plot_recipe_flavour_distribution(recipe_flavour_distribution_result)
+    ingredient_dietary_restrictions_result = execute_procedure('GetIngredientDietaryRestrictions')
+    plot_ingredient_dietary_restrictions(ingredient_dietary_restrictions_result)
 
-user_ingredient_preferences_result = execute_procedure('GetUserIngredientPreferences')
-plot_user_ingredient_preferences(user_ingredient_preferences_result)
+    chef_recipe_count_result = execute_procedure('GetChefRecipeCount')
+    plot_chef_recipe_count(chef_recipe_count_result)
 
-ingredient_dietary_restrictions_result = execute_procedure('GetIngredientDietaryRestrictions')
-plot_ingredient_dietary_restrictions(ingredient_dietary_restrictions_result)
+    user_ingredient_caloric_intake_result = execute_procedure('GetUserIngredientCaloricIntake')
+    plot_user_ingredient_caloric_intake(user_ingredient_caloric_intake_result)
 
-chef_recipe_count_result = execute_procedure('GetChefRecipeCount')
-plot_chef_recipe_count(chef_recipe_count_result)
+    user_ingredient_preferences_heatmap_result = execute_procedure('GetUserIngredientPreferencesHeatmap')
+    plot_user_ingredient_preferences_heatmap(user_ingredient_preferences_heatmap_result)
 
-user_ingredient_caloric_intake_result = execute_procedure('GetUserIngredientCaloricIntake')
-plot_user_ingredient_caloric_intake(user_ingredient_caloric_intake_result)
-
-user_ingredient_preferences_heatmap_result = execute_procedure('GetUserIngredientPreferencesHeatmap')
-plot_user_ingredient_preferences_heatmap(user_ingredient_preferences_heatmap_result)
 
 if __name__ == "__main__":
     run_visualizations()
