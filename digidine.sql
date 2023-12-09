@@ -1,3 +1,6 @@
+DROP DATABASE IF EXISTS digidine;
+CREATE DATABASE digidine;
+USE digidine;
 -- MySQL dump 10.13  Distrib 8.0.34, for macos13 (arm64)
 --
 -- Host: localhost    Database: digidine
