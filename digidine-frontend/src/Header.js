@@ -50,6 +50,7 @@ export default function Header(props) {
     axios.get('http://localhost:5000/visualize')
     .then((response) => {
       console.log("Downloaded successfully", response);
+      alert("Downloaded successfully into visualization/")
     })
     .catch((error) => {
       console.log("Error downloading", error);
