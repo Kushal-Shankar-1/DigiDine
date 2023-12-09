@@ -10,7 +10,9 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import UserIcon from '@mui/icons-material/Person';
 import Logout from '@mui/icons-material/Logout';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 
 export default function Header(props) {
@@ -53,9 +55,11 @@ React.useEffect (() => {
   return (
     <AppBar position="absolute">
       <Toolbar >
-        <Typography style={{ justifySelf: 'start', marginRight: '50%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
+        <Typography style={{ justifySelf: 'start', marginRight: '10%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
           DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
         </Typography>
+        {/* <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} />
+        <Typography style={{ justifySelf: 'center', marginRight: '10%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography> */}
         {props.loggedIn == true && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
