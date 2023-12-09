@@ -71,7 +71,7 @@ return (
           DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
         </Typography>
         <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} />
-        <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '10%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
+        <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
         {props.loggedIn == true && user!==null && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
