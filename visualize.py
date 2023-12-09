@@ -46,7 +46,7 @@ def save_plot(figure, filename):
 def plot_user_dietary_restrictions(result):
     df = pd.DataFrame(result, columns=['count', 'restrict_name'])
     # user_df = df.groupby(['user_name', 'first_name', 'last_name'])['count'].sum().reset_index()
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(12, 8))
     sns.barplot(x='restrict_name', y='count', data=df)
     plt.title('User Count for Dietary Restrictions(Top 7)')
     plt.xlabel('Dietary Restriction')
@@ -91,7 +91,7 @@ def plot_ingredient_dietary_restrictions(result):
     plt.title('Ingredient Dietary Restrictions')
     plt.xlabel('Dietary Restriction')
     plt.ylabel('Count')
-    save_plot(fig, 'chef_recipe_count.png')
+    save_plot(fig, 'ingredient_dietary_restriction.png')
 
 def plot_chef_recipe_count(result):
     df = pd.DataFrame(result, columns=['Chef', 'Recipe Count'])
