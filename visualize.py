@@ -1,8 +1,10 @@
-import os 
+import os
+
+import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+
 from config import Config
 
 # Configuration for your database
@@ -12,7 +14,6 @@ db_config = {
     "password": Config.DB_PASSWORD,
     "database": Config.DB_NAME
 }
-
 
 
 def execute_procedure(procedure_name):
@@ -66,7 +67,7 @@ def plot_ingredient_distribution(result):
 
 def plot_user_flavour_preferences(result):
     df = pd.DataFrame(result, columns=['Count', 'Flavour'])
-    fig=plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(12, 8))
     sns.barplot(x='Flavour', y='Count', data=df)
     plt.title('User Flavour Preferences (Top 7)')
     plt.title('User Flavour Preferences')
@@ -74,9 +75,10 @@ def plot_user_flavour_preferences(result):
     plt.ylabel('Count')
     save_plot(fig, 'user_flavour_preferences.png')
 
+
 def plot_recipe_flavour_distribution(result):
     df = pd.DataFrame(result, columns=['Count', 'Flavour'])
-    fig=plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(12, 8))
     sns.barplot(x='Flavour', data=df, y='Count')
     plt.title('Recipe Flavour Distribution (Top 7)')
     plt.xlabel('Flavour')
@@ -93,6 +95,7 @@ def plot_ingredient_dietary_restrictions(result):
     plt.ylabel('Count')
     save_plot(fig, 'ingredient_dietary_restriction.png')
 
+
 def plot_chef_recipe_count(result):
     df = pd.DataFrame(result, columns=['Chef', 'Recipe Count'])
     fig = plt.figure(figsize=(10, 6))
@@ -100,7 +103,6 @@ def plot_chef_recipe_count(result):
     plt.title('Chef Recipe Count')
     plt.ylabel('Recipe Count')
     save_plot(fig, 'chef_recipe_count.png')
-
 
 
 def run_visualizations():
