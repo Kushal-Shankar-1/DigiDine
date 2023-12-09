@@ -109,6 +109,7 @@ def run_visualizations():
     user_dietary_restrictions_result = execute_procedure('GetUserDietaryRestrictions')
     plot_user_dietary_restrictions(user_dietary_restrictions_result)
 
+<<<<<<< HEAD
     user_flavour_preferences_result = execute_procedure('GetUserFlavourPreferences')
     plot_user_flavour_preferences(user_flavour_preferences_result)
 
@@ -121,6 +122,35 @@ def run_visualizations():
     chef_recipe_count_result = execute_procedure('GetChefRecipeCount')
     plot_chef_recipe_count(chef_recipe_count_result)
 
+=======
+    ingredient_distribution_result = execute_procedure('GetIngredientDistributionInFridges')
+    plot_ingredient_distribution(ingredient_distribution_result)
+
+    user_flavour_preferences_result = execute_procedure('GetUserFlavourPreferences')
+    plot_user_flavour_preferences(user_flavour_preferences_result)
+
+    user_fridge_color_distribution_result = execute_procedure('GetUserFridgeColorDistribution')
+    plot_user_fridge_color_distribution(user_fridge_color_distribution_result)
+
+    recipe_flavour_distribution_result = execute_procedure('GetRecipeFlavourDistribution')
+    plot_recipe_flavour_distribution(recipe_flavour_distribution_result)
+
+    user_ingredient_preferences_result = execute_procedure('GetUserIngredientPreferences')
+    plot_user_ingredient_preferences(user_ingredient_preferences_result)
+
+    ingredient_dietary_restrictions_result = execute_procedure('GetIngredientDietaryRestrictions')
+    plot_ingredient_dietary_restrictions(ingredient_dietary_restrictions_result)
+
+    chef_recipe_count_result = execute_procedure('GetChefRecipeCount')
+    plot_chef_recipe_count(chef_recipe_count_result)
+
+    user_ingredient_caloric_intake_result = execute_procedure('GetUserIngredientCaloricIntake')
+    plot_user_ingredient_caloric_intake(user_ingredient_caloric_intake_result)
+
+    user_ingredient_preferences_heatmap_result = execute_procedure('GetUserIngredientPreferencesHeatmap')
+    plot_user_ingredient_preferences_heatmap(user_ingredient_preferences_heatmap_result)
+
+>>>>>>> 8a2c6e572651d947ed09d107db6efc98ab754696
 
 if __name__ == "__main__":
     run_visualizations()
