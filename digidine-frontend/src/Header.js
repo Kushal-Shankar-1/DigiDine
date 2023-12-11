@@ -13,21 +13,20 @@ import Logout from '@mui/icons-material/Logout';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function Header(props) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [user, setUser] = React.useState(JSON.parse(sessionStorage.getItem('user')));
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
+  const loggedIn = useSelector(state => state.loggedIn);
+  const user = useSelector(state => state.user);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const [loggedIn, setLoggedIn] = React.useState(props.loggedIn);
-  React.useEffect(() => {
-    setLoggedIn(props.loggedIn);
-    console.log("PROPS UPDATED IN HEADER", props);
-  }, []);
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -39,10 +38,10 @@ export default function Header(props) {
 
   const handleLogOut = () => {
     console.log("logging out", props)
-    sessionStorage.setItem('loggedIn', false);
-    props.setLoggedIn(false);
+    sessionStorage.removeItem('user');
     navigate('/');
-    window.location.reload();
+    // window.location.reload();
+    dispatch({ type: 'LOG_OUT' });
     handleClose();
   };
 
@@ -57,13 +56,7 @@ export default function Header(props) {
     })
   }
 
-React.useEffect (() => {
-  if(props.loggedIn !== loggedIn){
-    setLoggedIn(props.loggedIn);
-    window.location.reload();
-  }
-}, [props.loggedIn]);
-  
+
 return (
     <AppBar position="absolute">
       <Toolbar >
@@ -72,7 +65,7 @@ return (
         </Typography>
         <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} />
         <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
-        {props.loggedIn == true && user!==null && <>
+        {loggedIn == true && (user!==null)  && <>
         <UserIcon sx={{ mr: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
         {user.user_name}

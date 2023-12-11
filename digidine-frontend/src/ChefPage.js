@@ -8,9 +8,7 @@ import { FormControlLabel, Radio, FormLabel, FormControl, RadioGroup } from '@mu
 import Recipes from './Recipes';
 import AddRecipe from './AddRecipe';
 import axios from 'axios';
-
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import { useSelector } from 'react-redux';
 
 
 export default function ChefPage() {
@@ -20,7 +18,7 @@ export default function ChefPage() {
     const [data, setData] = useState([]);
     const [allData, setAllData] = useState([]);
     const [chefData, setChefData] = useState([]);
-    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
+    const user = useSelector(state => state.user);
 
     const handleOption = (event) => {
       setExploreType(event.target.value);
@@ -38,12 +36,9 @@ export default function ChefPage() {
         .then((response) => {
             setAllData(response.data);
             setData(response.data);
-            // sessionStorage.setItem('user', JSON.stringify(response.data));
-            // sessionStorage.setItem('loggedIn', true);
         })
         .catch((error) => {
             console.log(error);
-            // alert('Invalid Credentials');
         });
 
         axios.get(`http://localhost:5000/recipes/chef/${user.user_name}`)

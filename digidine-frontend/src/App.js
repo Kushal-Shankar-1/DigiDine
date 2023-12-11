@@ -1,7 +1,6 @@
 // App.js - Entry point
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SignIn from './SignIn';
 import SignUp from './SignUp';
 import SignUpChef from './SignUpChef';
 import SignUpOption from './SignUpOption';
@@ -16,6 +15,7 @@ const defaultTheme = createTheme();
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
+  
   return (
     <Router>
         <ThemeProvider theme={defaultTheme}>

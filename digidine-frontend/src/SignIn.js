@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-
+import { useDispatch } from 'react-redux';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -21,7 +21,8 @@ const defaultTheme = createTheme();
 
 export default function SignIn(props) {
 
-
+  const dispatch = useDispatch();
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -30,10 +31,8 @@ export default function SignIn(props) {
       password: data.get('password'),
     })
       .then((response) => {
-        console.log(response);
         sessionStorage.setItem('user', JSON.stringify(response.data.user_info));
-        sessionStorage.setItem('loggedIn', true);
-        props.setLoggedIn(true);
+        dispatch({ type: 'LOG_IN', payload: { user: response.data.user_info } });
       })
       .catch((error) => {
         console.log(error);
