@@ -13,6 +13,7 @@ import Radio from '@mui/material/Radio';
 import UpdatePreferences from './UpdatePreferences';
 import UpdateInventory from './UpdateInventory';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 export default function UserPage(props) {
@@ -24,7 +25,7 @@ export default function UserPage(props) {
     const [inventoryData, setInventoryData] = useState([]);
     const [preferencesData, setPreferencesData] = useState([]);
     const [preferenceAndInventoryData, setPreferenceAndInventoryData] = useState([]);
-    const [user, setUser] = useState(props.user);
+    const user = useSelector(state => state.user);
 
     const handleOption = (event) => {
         setExploreType(event.target.value);
