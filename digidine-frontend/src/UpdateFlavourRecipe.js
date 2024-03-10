@@ -23,8 +23,8 @@ const UpdateFlavourRecipe = (props) => {
 
     useEffect(() => {
         setFlavorPreferences(props.data);
-        setSelectedFlavorPreferences(props.data.filter((preference) => preference.is_present == true).map((preference) => preference.flavour_name));
-    }, []);
+        setSelectedFlavorPreferences(props.data.filter((preference) => preference.is_present === true).map((preference) => preference.flavour_name));
+    }, [props.data]);
 
     return (
         <Container style={{marginTop:'5%'}} maxWidth="md">

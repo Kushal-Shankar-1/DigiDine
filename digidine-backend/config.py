@@ -1,9 +1,11 @@
+import os
 class Config:
     """Set Flask configuration variables."""
-
     # Database connection parameters
-    # DB_HOST = "localhost"  # Database host
-    DB_HOST = "db"  # Database host
+    if "DB_HOST" in os.environ:
+        DB_HOST = os.environ["DB_HOST"]
+    else:
+        DB_HOST = "localhost"
     DB_USER = "root"  # Database username
     DB_PASSWORD = "root"  # Database password
     DB_NAME = "digidine"  # Database name

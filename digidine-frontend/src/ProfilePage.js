@@ -9,7 +9,7 @@ export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingRestaurant, setIsEditingRestaurant] = useState(false);
     const [restaurant, setRestaurant] = useState([]);
-    const [isChef, setIsChef] = useState(false);
+    const [isChef] = useState(false);
     const [user, setUser] = useState(sessionStorage.getItem('user'));
 
     const handleEdit = () => {
@@ -20,7 +20,7 @@ export default function ProfilePage() {
         // Perform submit logic here
         axios.post('http://localhost:5000/update/email-address', { user_name:user.user_name, new_email:email })
              .then((response) => {
-                 if(response.status == 200){
+                 if(response.status === 200){
                     setIsEditing(false);
                     sessionStorage.setItem('user', JSON.stringify({...user, email:email}));
                  }

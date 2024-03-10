@@ -10,7 +10,9 @@
 services:
   server:
     build:
-      context: .
+      context: ./digidine-backend
+    environment:
+      - DB_HOST=db
     ports:
       - 5000:5000
     depends_on:
@@ -26,7 +28,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./digidine.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./digidine-db/digidine.sql:/docker-entrypoint-initdb.d/init.sql
       - ./data:/var/lib/mysql
 
 

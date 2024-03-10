@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button, Checkbox } from '@mui/material';
+import React from 'react';
+import { Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const SignUpOption = () => {

@@ -5,7 +5,7 @@ personalized recipe suggestions based on your dietary preferences and available 
 
 ## Run using Docker
 
-If you have docker installed in your system, run the command  `docker compose up --build` and the application should boot up after performing the necessary installations. Else, follow the below instructions (do note that the parameter *DB_HOST* `config.py` will have to be updated to the appropriate hostname if not using docker - most likely `localhost`).
+If you have docker installed in your system, run the command  `docker compose up --build` and the application should boot up after performing the necessary installations.
 
 
 ## Setting Up the Project

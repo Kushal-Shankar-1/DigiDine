@@ -5,23 +5,23 @@ import axios from 'axios';
 const UpdateInventory = (props) => {
     const [currentIngredients, setCurrentIngredients] = useState([]);
     const [availableIngredients, setAvailableIngredients] = useState([]);
-    const [fridgeId, setFridgeId] = useState(props.fridgeId);
+    const [fridgeId] = useState(props.fridgeId);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/fridge/${fridgeId}/ingredients`)
             .then((response) => {
-                console.log(response.data.filter((ingredient) => ingredient.is_present == true));
-                setCurrentIngredients(response.data.filter((ingredient) => ingredient.is_present == true).map((ingredient) => ingredient.fridge_ingredients));
-                setAvailableIngredients(response.data.filter((ingredient) => ingredient.is_present == false).map((ingredient) => ingredient.fridge_ingredients));
+                console.log(response.data.filter((ingredient) => ingredient.is_present === true));
+                setCurrentIngredients(response.data.filter((ingredient) => ingredient.is_present === true).map((ingredient) => ingredient.fridge_ingredients));
+                setAvailableIngredients(response.data.filter((ingredient) => ingredient.is_present === false).map((ingredient) => ingredient.fridge_ingredients));
             }
             )
-    }, []);
+    }, [fridgeId]);
     
     const handleRemove = (ingredient) => {
         axios.post(`http://localhost:5000/fridge/${fridgeId}/ingredient`, { ingredient: ingredient, is_present: false })
             .then((response) => {
                 console.log("FRIDGE INGREDIENT",response);
-                if (response.status == 200) {
+                if (response.status === 200) {
                     setAvailableIngredients([...availableIngredients, ingredient]);
                     setCurrentIngredients(currentIngredients.filter((r) => r !== ingredient));
                 }
@@ -35,7 +35,7 @@ const UpdateInventory = (props) => {
         axios.post(`http://localhost:5000/fridge/${fridgeId}/ingredient`, { ingredient: ingredient, is_present: true })
             .then((response) => {
                 console.log("FRIDGE INGREDIENT",response);
-                if (response.status == 200) {
+                if (response.status === 200) {
                     setCurrentIngredients([...currentIngredients, ingredient]);
                     setAvailableIngredients(availableIngredients.filter((r) => r !== ingredient));
                 }
@@ -51,7 +51,7 @@ const UpdateInventory = (props) => {
                 <Grid item xs={6}>
                     <Paper style={{ background: "lightblue" }}>
                         <Typography align="center" variant="h6">Current Ingredients</Typography>
-                        {currentIngredients.length == 0 ?
+                        {currentIngredients.length === 0 ?
                             <Card style={{ background: "lightcyan" }}>
                                 <CardContent><Typography style={{ paddingTop: '5%' }} align='center' ><i>Psst psst! Time to go grocery shopping, maybe?</i></Typography></CardContent>
                             </Card>
@@ -65,7 +65,7 @@ const UpdateInventory = (props) => {
                 <Grid item xs={6}>
                     <Paper style={{ background: "lightblue" }}>
                         <Typography align="center" variant="h6">Available Ingredients</Typography>
-                        {availableIngredients.length == 0 ?
+                        {availableIngredients.length === 0 ?
                             <Card style={{ background: "lightcyan" }}>
                                 <CardContent><Typography style={{ paddingTop: '5%' }} align='center' ><i>Looks like someone has done a good job with their grocery shopping! Now let's get cooking. Chop chop!</i></Typography></CardContent>
                             </Card>

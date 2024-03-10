@@ -1,20 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, Grid, Stack, CardMedia } from '@mui/material';
+import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, Stack, CardMedia } from '@mui/material';
 import axios from 'axios';
 
 const ExpandRecipe = (props) => {
-    // Dummy image URL
-    const imageUrl = 'https://dummyimage.com/200x100/000/fff';
 
-    // State variable to store the instructions
-    const [instructions, setInstructions] = useState([
-        'Preheat the oven to 350°F',
-        'Mix the dry ingredients in a bowl',
-        'Add the wet ingredients and stir well',
-        'Pour the batter into a greased baking pan',
-        'Bake for 30 minutes or until golden brown',
-        'Let it cool before serving'
-    ]);
     const [recipe, setRecipe] = useState(null);
     useEffect(() => {
         axios.get(`http://localhost:5000/recipes/information/${props.selectedRecipe}`)
@@ -24,7 +13,7 @@ const ExpandRecipe = (props) => {
             })
             .catch(error => console.error('Error fetching data: ', error));
     }
-        , []);
+        , [props.selectedRecipe]);
     if (recipe == null)
         return false;
     return (
@@ -36,7 +25,7 @@ const ExpandRecipe = (props) => {
                         // 16:9
                         pt: '56.25%',
                     }}
-                    image={recipe.image == null || recipe.image == "" ? "https://source.unsplash.com/random?wallpapers" : recipe.image}
+                    image={recipe.image == null || recipe.image === "" ? "https://source.unsplash.com/random?wallpapers" : recipe.image}
                 />
                 {/* <img src={recipe.image} alt="Recipe Image" style={{ width: '100%', height: 'auto' }} /> */}
                 

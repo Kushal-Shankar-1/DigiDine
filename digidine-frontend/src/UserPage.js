@@ -77,7 +77,7 @@ export default function UserPage(props) {
             });
         }
 
-    },[selectedOption])
+    },[selectedOption, user.user_name])
     useEffect(() => {
         if(exploreType === "all"){
             setData(allData);
@@ -91,7 +91,7 @@ export default function UserPage(props) {
         else if(exploreType === "custom"){
             setData(preferenceAndInventoryData);
         }
-    },[exploreType]
+    },[allData, exploreType, inventoryData, preferenceAndInventoryData, preferencesData]
     );
     return (
         <>

@@ -13,7 +13,7 @@ export default function Home() {
             setUserType(user.restaurant_name === undefined ? 'user' : 'chef');
         }
     }
-    , [loggedIn]);
+    , [loggedIn, user]);
 
   return (
     loggedIn? (

@@ -7,23 +7,23 @@ const UpdatePreferences = (props) => {
     const [selectedDietaryRestrictions, setSelectedDietaryRestrictions] = useState([]);
     const [selectedFlavorPreferences, setSelectedFlavorPreferences] = useState([]);
     const [flavorPreferences, setFlavorPreferences] = useState([]);
-    const [user, setUser] = useState(props.user);
+    const [user] = useState(props.user);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/get-dietary-restrictions/${user}`)
             .then((response) => {
                 setDietaryRestrictions(response.data);
 
-                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.has_restriction == true).map((restriction) => restriction.restrict_name));
-                console.log("SELECTED DIETARY RESTRICTIONS", response.data.filter((restriction) => restriction.has_restriction == true).map((restriction) => restriction.restrict_name));
+                setSelectedDietaryRestrictions(response.data.filter((restriction) => restriction.has_restriction === true).map((restriction) => restriction.restrict_name));
+                console.log("SELECTED DIETARY RESTRICTIONS", response.data.filter((restriction) => restriction.has_restriction === true).map((restriction) => restriction.restrict_name));
 
             })
         axios.get(`http://localhost:5000/get-user-flavour/${user}`)
             .then((response) => {
                 setFlavorPreferences(response.data);
-                setSelectedFlavorPreferences(response.data.filter((preference) => preference.has_flavour_pref == true).map((preference) => preference.flavour_name));
+                setSelectedFlavorPreferences(response.data.filter((preference) => preference.has_flavour_pref === true).map((preference) => preference.flavour_name));
             })
-    }, []);
+    }, [user]);
 
     const handleDietaryRestrictionsChange = (restriction) => {
         if (selectedDietaryRestrictions.includes(restriction)) {
@@ -32,7 +32,7 @@ const UpdatePreferences = (props) => {
                 hasRestriction: false
             })
                 .then((response) => {
-                    if (response.status == 200)
+                    if (response.status === 200)
                         setSelectedDietaryRestrictions(selectedDietaryRestrictions.filter(r => r !== restriction));
                 })
 
@@ -42,7 +42,7 @@ const UpdatePreferences = (props) => {
                 hasRestriction: true
             })
                 .then((response) => {
-                    if (response.status == 200)
+                    if (response.status === 200)
                         setSelectedDietaryRestrictions([...selectedDietaryRestrictions, restriction]);
                 })
         }
@@ -55,7 +55,7 @@ const UpdatePreferences = (props) => {
                 isPreferred: false
             })
                 .then((response) => {
-                    if (response.status == 200)
+                    if (response.status === 200)
                         setSelectedFlavorPreferences(selectedFlavorPreferences.filter(p => p !== preference));
         })}
          else {
@@ -65,7 +65,7 @@ const UpdatePreferences = (props) => {
             })
                 .then((response) => {
                     console.log(response.data);
-                    if (response.status == 200)
+                    if (response.status === 200)
                         setSelectedFlavorPreferences([...selectedFlavorPreferences, preference]);
         })
     }

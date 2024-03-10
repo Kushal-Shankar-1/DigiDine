@@ -10,11 +10,10 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import UserIcon from '@mui/icons-material/Person';
 import Logout from '@mui/icons-material/Logout';
-import DownloadIcon from '@mui/icons-material/Download';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-
+// import DownloadIcon from '@mui/icons-material/Download';
+// import axios from 'axios';
 
 export default function Header(props) {
   const navigate = useNavigate();
@@ -45,16 +44,16 @@ export default function Header(props) {
     handleClose();
   };
 
-  const handleDownload = () => {
-    axios.get('http://localhost:5000/visualize')
-    .then((response) => {
-      console.log("Downloaded successfully", response);
-      alert("Downloaded successfully into visualization/")
-    })
-    .catch((error) => {
-      console.log("Error downloading", error);
-    })
-  }
+  // const handleDownload = () => {
+  //   axios.get('http://localhost:5000/visualize')
+  //   .then((response) => {
+  //     console.log("Downloaded successfully", response);
+  //     alert("Downloaded successfully into visualization/")
+  //   })
+  //   .catch((error) => {
+  //     console.log("Error downloading", error);
+  //   })
+  // }
 
 
 return (
@@ -65,7 +64,7 @@ return (
         </Typography>
         {/* <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} /> */}
         {/* <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography> */}
-        {loggedIn == true && (user!==null)  && <>
+        {loggedIn === true && (user !== null)  && <>
         <UserIcon sx={{ ml: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
         {user.user_name}

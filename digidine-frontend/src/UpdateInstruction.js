@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
+import { CardContent, Typography, List, ListItem, ListItemText, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 
 export default function UpdateInstruction(props) {
     const [instructions, setInstructions] = useState(props.data);
-    const [recipe, setRecipe] = useState(props.recipe);
+    const [recipe] = useState(props.recipe);
      // Function to remove an instruction from the instructions array
      const removeInstruction = () => {
         axios.post(`http://localhost:5000/recipe/remove-instruction`, { recipe_id: recipe })
@@ -56,7 +56,7 @@ export default function UpdateInstruction(props) {
                 {instructions.map((instruction, index) => (
                     <ListItem key={index}>
                         <ListItemText primary={`Step ${index + 1}: ${instruction.step_description}`} />
-                        {index == instructions.length -1 && <IconButton onClick={() => removeInstruction(index)}>
+                        {index === instructions.length -1 && <IconButton onClick={() => removeInstruction(index)}>
                             <CloseIcon />
                         </IconButton>}
                         <IconButton onClick={() => {

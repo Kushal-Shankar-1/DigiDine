@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button, Checkbox } from '@mui/material';
+import { Card, Typography, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,7 +10,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [username, setUsername] = useState('');
-    const [fridgeColor, setFridgeColor] = useState('blue');
+    const [fridgeColor] = useState('blue');
 
     const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const SignUp = () => {
     };
 
     const handleSubmit = () => {
-        if(username == '' || password == '' || firstName == '' || lastName == '' || contact == ''){
+        if(username === '' || password === '' || firstName === '' || lastName === '' || contact === ''){
             alert("Please fill all the fields");
             return;
         }
@@ -102,7 +102,7 @@ const SignUp = () => {
                                 onChange={handleConfirmPasswordChange}
                                 style={{ marginBottom: '10px' }}
                             />
-                            <Button disabled={password =='' || password!==confirmPassword} variant="contained" color="primary" onClick={handleSubmit}>
+                            <Button disabled={password ==='' || password!==confirmPassword} variant="contained" color="primary" onClick={handleSubmit}>
                                 Submit
                             </Button>
                         </form>

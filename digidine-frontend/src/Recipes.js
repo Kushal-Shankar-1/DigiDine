@@ -13,7 +13,6 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material
 import axios from 'axios';
 
   
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
 export default function Recipes(props) {
@@ -22,7 +21,7 @@ export default function Recipes(props) {
   const [data, setData] = useState([]);
   const [isChef, setIsChef] = useState(props.isChef);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const user = JSON.parse(sessionStorage.getItem('user'));
+  
   const handleRemove = (recipe) => {
     // Open the dialog box to confirm deletion
     setSelectedRecipe(recipe);
@@ -105,7 +104,7 @@ export default function Recipes(props) {
                       // 16:9
                       pt: '56.25%',
                     }}
-                    image={card.image==null || card.image==""? "https://source.unsplash.com/random?wallpapers": card.image}
+                    image={card.image==null || card.image === ""? "https://source.unsplash.com/random?wallpapers": card.image}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
@@ -120,8 +119,8 @@ export default function Recipes(props) {
                   </CardContent>
                   <CardActions>
                     <Button size="small" onClick={()=>handleExpand(card.recipe_id)}>View</Button>
-                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleEdit(card.recipe_id)}>Edit</Button>}
-                    {isChef == true && card.chef==props.chefName && <Button size="small" onClick={()=>handleRemove(card.recipe_id)}>Remove</Button>}
+                    {isChef === true && card.chef === props.chefName && <Button size="small" onClick={()=>handleEdit(card.recipe_id)}>Edit</Button>}
+                    {isChef === true && card.chef === props.chefName && <Button size="small" onClick={()=>handleRemove(card.recipe_id)}>Remove</Button>}
                   </CardActions>
                 </Card>
               </Grid>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button, Menu, MenuItem, Select } from '@mui/material';
+import { Card, Typography, TextField, Button, MenuItem, Select } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,7 +9,6 @@ const SignUpChef = () => {
     const [email, setEmail] = useState('');
     const [restaurants, setRestaurants] = useState([]);
     const [selectedRestaurant, setSelectedRestaurant] = useState('Select your restaurant');
-    const [isError, setIsError] = useState(true);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -49,7 +48,7 @@ const SignUpChef = () => {
             alert("Passwords don't match");
             return;
         }
-        if(username == '' || password == '' || firstName == '' || lastName == '' || email == ''){
+        if(username === '' || password === '' || firstName === '' || lastName === '' || email === ''){
             alert("Please fill all the fields");
             return;
         }

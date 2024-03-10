@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Container, Card, CardContent, Typography, ListItem, ListItemText, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
 import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
@@ -8,9 +7,7 @@ import axios from 'axios';
 import UpdateInstruction from './UpdateInstruction';
 
 const EditRecipe = (props) => {
-    // Dummy image URL
-    const imageUrl = 'https://dummyimage.com/200x100/000/fff';
-
+    
     // State variable to store the instructions
     const [instructions, setInstructions] = useState([]);
 
@@ -27,7 +24,7 @@ const EditRecipe = (props) => {
             })
             .catch(error => console.error('Error fetching data: ', error));
     }
-        , []);
+        , [props.selectedRecipe]);
 
     if (recipe == null)
         return false;

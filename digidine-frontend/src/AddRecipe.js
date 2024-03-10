@@ -1,41 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, CardContent, Typography, List, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Container, Card, CardContent, Typography, ListItem, ListItemText, TextField, IconButton, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import UpdateIngredientsRecipe from './UpdateIngredientsRecipe';
 import UpdateFlavourRecipe from './UpdateFlavourRecipe';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import UpdateInstruction from './UpdateInstruction';
 
 const AddRecipe = (props) => {
-    // Dummy image URL
-    const imageUrl = 'https://dummyimage.com/200x100/000/fff';
-    const navigate = useNavigate();
-    // State variable to store the instructions
-    const [instructions, setInstructions] = useState([]);
+    
     const [image, setImage] = useState('');
     const [recipe, setRecipe] = useState(null);
     const [data, setData] = useState(null);
     const handleBack = () => {
         props.setSelectedOption("explore");;
-    }
-    // Function to remove an instruction from the instructions array
-    const removeInstruction = () => {
-        const updatedInstructions = [...instructions];
-        updatedInstructions.splice(-1, 1);
-        setInstructions(updatedInstructions);
-    };
-
-    // Function to edit an instruction in the instructions array
-    const editInstruction = (index, newInstruction) => {
-        const updatedInstructions = [...instructions];
-        updatedInstructions[index] = newInstruction;
-        setInstructions(updatedInstructions);
-    };
-
-    const addInstruction = (newInstruction) => {
-        setInstructions([...instructions, newInstruction]);
     }
 
     const handleConfirmTitle = () => {

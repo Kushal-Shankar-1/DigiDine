@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 const UpdateIngredientsRecipe = (props) => {
-    const [recipe, setRecipe] = useState(props.recipe);
+    const [recipe] = useState(props.recipe);
     const [currentIngredients, setCurrentIngredients] = useState([]);
     const [availableIngredients, setAvailableIngredients] = useState([]);
 
@@ -27,9 +27,9 @@ const UpdateIngredientsRecipe = (props) => {
 
     }
     useEffect(() => {
-        setCurrentIngredients(props.data.filter((i) => i.is_present == true).map((i) => i.ingredient_name));
-        setAvailableIngredients(props.data.filter((i) => i.is_present == false).map((i) => i.ingredient_name));
-    }, []);
+        setCurrentIngredients(props.data.filter((i) => i.is_present === true).map((i) => i.ingredient_name));
+        setAvailableIngredients(props.data.filter((i) => i.is_present === false).map((i) => i.ingredient_name));
+    }, [props.data]);
 
     return (
         <Container maxWidth="md">
