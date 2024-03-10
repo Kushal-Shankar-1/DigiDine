@@ -1,0 +1,39 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    command: sh -c "dockerize -wait tcp://db:3306 -timeout 300s -wait-retry-interval 5s python3 app.py"
+
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "32000:3306"
+    container_name: "db"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./digidine.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/mysql
+
+
+  frontend:
+    build:
+      context: ./digidine-frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
