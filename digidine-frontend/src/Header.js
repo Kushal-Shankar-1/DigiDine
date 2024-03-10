@@ -60,13 +60,13 @@ export default function Header(props) {
 return (
     <AppBar position="absolute">
       <Toolbar >
-        <Typography style={{ justifySelf: 'start', marginRight: '10%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
+        <Typography style={{ justifySelf: 'start', marginLeft: '35%', marginRight: '20%', cursor: 'pointer' }} variant="h6" color="inherit" noWrap onClick={() => navigate('/')}>
           DigiDine: AI PERSONAL CHEF AND NUTRITIONIST
         </Typography>
-        <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} />
-        <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography>
+        {/* <DownloadIcon style={{cursor: 'pointer'}} sx={{ mr: 2 }} onClick={handleDownload} /> */}
+        {/* <Typography onClick={handleDownload}  style={{ justifySelf: 'center', marginRight: '30%', cursor: 'pointer' }} variant="h6">Data Visualization</Typography> */}
         {loggedIn == true && (user!==null)  && <>
-        <UserIcon sx={{ mr: 2 }} />
+        <UserIcon sx={{ ml: 2 }} />
         <Typography variant="h6" color="inherit" style={{cursor: 'default'}} noWrap>
         {user.user_name}
         </Typography>
